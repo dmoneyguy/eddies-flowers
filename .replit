@@ -1,5 +1,7 @@
 modules = ["nodejs-20"]
 
+run = "npm install && npm run build && npx serve dist -s -l 5173"
+
 [nix]
 channel = "stable-24_05"
 
@@ -13,7 +15,16 @@ localPort = 5173
 externalPort = 80
 
 [workflows]
-runButton = "dev"
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "build-and-serve"
 
 [[workflows.workflow]]
 name = "dev"
@@ -21,7 +32,7 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm install && npm run dev -- --host 0.0.0.0 --port 5173"
+args = "npm install && npm run dev"
 waitForPort = 5173
 
 [[workflows.workflow]]
@@ -30,5 +41,5 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm install && npm run build && npx serve dist -s -l 3000"
-waitForPort = 3000
+args = "npm install && npm run build && npx serve dist -s -l 5173"
+waitForPort = 5173
