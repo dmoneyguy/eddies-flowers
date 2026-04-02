@@ -1,0 +1,38 @@
+.announcement-bar {
+  background: var(--color-green);
+  color: var(--color-white);
+  padding: 10px 0;
+  text-align: center;
+  position: relative;
+  z-index: 100;
+}
+
+.announcement-bar__text {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--color-white);
+  line-height: 1.4;
+}
+
+.announcement-bar__text strong {
+  font-weight: 700;
+}
+
+.announcement-bar__link {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-white);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: opacity 0.2s ease;
+}
+.announcement-bar__link:hover {
+  opacity: 0.8;
+  color: var(--color-white);
+}
+
+@media (max-width: 600px) {
+  .announcement-bar__text {
+    font-size: 12px;
+  }
+}

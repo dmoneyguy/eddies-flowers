@@ -1,0 +1,119 @@
+.age-gate {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: ageFadeIn 0.4s ease;
+}
+
+@keyframes ageFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.age-gate__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(27, 27, 27, 0.97);
+  backdrop-filter: blur(4px);
+}
+
+.age-gate__box {
+  position: relative;
+  background: #1c1c1e;
+  border: 1px solid rgba(115, 190, 68, 0.3);
+  border-radius: 20px;
+  padding: 48px 40px;
+  max-width: 460px;
+  width: 100%;
+  text-align: center;
+  color: #fff;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+  animation: ageSlideUp 0.4s ease;
+}
+
+@keyframes ageSlideUp {
+  from { transform: translateY(24px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.age-gate__leaf {
+  font-size: 40px;
+  margin-bottom: 16px;
+}
+
+.age-gate__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.age-gate__logo-mark {
+  width: 48px;
+  height: 48px;
+  background: var(--color-green);
+  color: white;
+  font-size: 24px;
+  font-weight: 700;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.age-gate__logo-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.age-gate__logo-sub {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  font-weight: 400;
+}
+
+.age-gate__title {
+  font-size: 32px;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.age-gate__body {
+  font-size: 15px;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+.age-gate__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.age-gate__btn {
+  width: 100%;
+  font-size: 15px;
+  padding: 15px 28px;
+}
+
+.age-gate__disclaimer {
+  font-size: 11px;
+  color: rgba(255,255,255,0.35);
+  line-height: 1.6;
+}
+
+@media (max-width: 480px) {
+  .age-gate__box {
+    padding: 36px 24px;
+  }
+}

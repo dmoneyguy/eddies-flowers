@@ -1,0 +1,43 @@
+/* App shell — page layout */
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1;
+}
+
+/* Button active/press-down micro-interaction */
+.btn:active {
+  transform: scale(0.97) translateY(1px);
+  transition: transform 0.08s ease !important;
+}
+
+/* Ripple on button click */
+.btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0.15);
+  opacity: 0;
+  border-radius: inherit;
+  transition: opacity 0.3s ease;
+}
+
+.btn:active::after {
+  opacity: 1;
+}
+
+/* Scroll snap on homepage sections — proximity for natural feel */
+.home main,
+.home {
+  /* Applied via JS to avoid snapping on non-home pages */
+}

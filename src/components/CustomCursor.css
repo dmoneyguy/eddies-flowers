@@ -1,0 +1,53 @@
+@media (hover: hover) {
+  * { cursor: none !important; }
+
+  .cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 12px;
+    height: 12px;
+    background: var(--color-green);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    will-change: transform;
+    transition: width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
+  }
+
+  .cursor-dot--hover {
+    width: 6px;
+    height: 6px;
+    opacity: 0.5;
+  }
+
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 40px;
+    height: 40px;
+    border: 1.5px solid var(--color-green);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99998;
+    will-change: transform;
+    opacity: 0.5;
+    transition: width 0.25s ease, height 0.25s ease, opacity 0.25s ease, border-color 0.25s ease;
+  }
+
+  .cursor-ring--hover {
+    width: 48px;
+    height: 48px;
+    opacity: 0.9;
+    border-color: var(--color-green);
+    background: rgba(115,190,68,0.07);
+  }
+}
+
+@media (hover: none) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none;
+  }
+}
