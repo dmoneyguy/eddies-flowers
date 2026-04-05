@@ -174,7 +174,7 @@ export default function About() {
               </p>
               <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                 <a
-                  href="https://legacy-prime-iamderekd.replit.app"
+                  href="https://legacy-prime-navy.vercel.app"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn--primary"

@@ -4,7 +4,7 @@ import './Footer.css';
 const FAMILY_BRANDS = [
   { name: "Erva", url: "https://erva-site-iamderekd.replit.app", external: true },
   { name: "Beantown Greentown", url: "https://beantown-greentown.replit.app", external: true },
-  { name: "Legacy Operations", url: "https://legacy-prime-iamderekd.replit.app", external: true },
+  { name: "Legacy Operations", url: "https://legacy-prime-navy.vercel.app", external: true },
   { name: "Eddie's Flowers", url: "/", external: false },
 ];
 
@@ -100,7 +100,7 @@ export default function Footer() {
               ))}
             </ul>
             <a
-              href="https://legacy-prime-iamderekd.replit.app"
+              href="https://legacy-prime-navy.vercel.app"
               target="_blank"
               rel="noopener noreferrer"
               className="footer__powered"
@@ -113,7 +113,7 @@ export default function Footer() {
         <div className="footer__bottom">
           <p className="footer__copy">
             © {year} Eddie's Flowers. All rights reserved. &nbsp;·&nbsp; Part of the{' '}
-            <a href="https://legacy-prime-iamderekd.replit.app" target="_blank" rel="noopener noreferrer">
+            <a href="https://legacy-prime-navy.vercel.app" target="_blank" rel="noopener noreferrer">
               Legacy Operations
             </a>{' '}
             family.
