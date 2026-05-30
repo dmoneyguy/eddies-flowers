@@ -1,0 +1,71 @@
+@import "tailwindcss";
+
+/* ============================================================
+   Eddie's Flowers Dispensary — brand tokens
+   Locked from the brand book (Apr 2026 — infibrain).
+   Color values are PMS-anchored: 360C / 109C / Black C / 7516C / 7500C.
+   ============================================================ */
+@theme {
+  --color-leaf-green: #73be44;
+  --color-sunshine-yellow: #ffd00f;
+  --color-charcoal-black: #2b2b2b;
+  --color-rustic-brown: #9a592c;
+  --color-warm-beige: #e6d3a3;
+
+  --color-bg: #ffffff;
+  --color-bg-dark: #2b2b2b;
+  --color-text: #2b2b2b;
+  --color-text-muted: #4a4a4a;
+  --color-text-inverse: #ffffff;
+  --color-border: #e5e5e5;
+
+  --font-sans: var(--font-poppins), system-ui, sans-serif;
+}
+
+/* Base resets, accessibility helpers */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Skip-to-content link (a11y) */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-charcoal-black);
+  color: var(--color-text-inverse);
+  padding: 0.5rem 1rem;
+  z-index: 100;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 0;
+}
+
+/* Focus ring — high-contrast, brand-aligned */
+:focus-visible {
+  outline: 2px solid var(--color-leaf-green);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Reduce motion if user prefers */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
