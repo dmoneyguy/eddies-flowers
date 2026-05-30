@@ -34,7 +34,7 @@ export function FounderNote() {
           {/* Pull quote — serif italic, larger leading */}
           <p className="display border-l-4 border-leaf-green/50 pl-5 text-2xl italic leading-snug text-charcoal-deep sm:text-3xl">
             I built this place because I wanted somewhere folks could walk in,
-            ask real questions, and find something that actually works for them.
+            ask real questions, and walk out with something they actually enjoy.
           </p>
 
           <p>
@@ -49,11 +49,8 @@ export function FounderNote() {
             >
               Join the waitlist
             </a>{" "}
-            and I&apos;ll send you a{" "}
-            <strong className="font-semibold text-leaf-green-deep">
-              10% founder-discount code
-            </strong>{" "}
-            the day we open. No spam, no list-selling — just one note from me.
+            and I&apos;ll send you a note the day we open so you&apos;re among the
+            first through the door. No spam, no list-selling — just one note from me.
           </p>
         </div>
 

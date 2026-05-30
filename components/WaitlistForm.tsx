@@ -96,11 +96,10 @@ export function WaitlistForm() {
         className="rounded-2xl border-2 border-leaf-green/30 bg-leaf-green/10 p-8 text-center"
       >
         <p className="text-2xl font-bold text-charcoal-black">
-          You&apos;re on the list. 🌿
+          You&apos;re on the list.
         </p>
         <p className="mt-3 text-base text-charcoal-black/80">
-          Your <span className="font-semibold text-leaf-green">10% founder discount</span>{" "}
-          is locked in. We&apos;ll reach out the day the doors open with your code.
+          We&apos;ll reach out the day the doors open. You&apos;re a founding member.
         </p>
         <p className="mt-4 text-xs text-charcoal-black/50">
           — Eddie
@@ -200,7 +199,7 @@ export function WaitlistForm() {
         disabled={state.kind === "submitting"}
         className="w-full rounded-full bg-leaf-green px-6 py-4 text-base font-semibold text-white shadow-sm transition-colors hover:bg-leaf-green/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green disabled:cursor-not-allowed disabled:opacity-60 sm:text-lg"
       >
-        {state.kind === "submitting" ? "Adding you…" : "Lock in my 10% off"}
+        {state.kind === "submitting" ? "Adding you…" : "Save my spot on the list"}
       </button>
 
       {state.kind === "error" && (
@@ -210,8 +209,9 @@ export function WaitlistForm() {
       )}
 
       <p id="waitlist-microcopy" className="text-xs text-charcoal-black/60">
-        By submitting you agree we can email or text you about Eddie&apos;s Flowers
-        opening. Unsubscribe anytime. We will never sell or share your info.
+        By submitting you confirm you are 21+ and agree we can email or text you
+        about Eddie&apos;s Flowers opening. Msg & data rates may apply. Reply STOP
+        to opt out. Unsubscribe anytime. We will never sell or share your info.
       </p>
     </form>
   );

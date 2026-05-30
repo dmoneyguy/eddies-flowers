@@ -111,7 +111,6 @@ export async function POST(req: NextRequest) {
       status: "new",
       metadata: {
         path: req.headers.get("referer") || null,
-        founder_discount: "10pct_first_visit",
       },
     });
   } catch (err) {
@@ -134,9 +133,9 @@ export async function POST(req: NextRequest) {
         text: [
           `Hi${name ? " " + name : ""},`,
           ``,
-          `Thanks for joining the Eddie's Flowers waitlist. Your 10% founder`,
-          `discount is locked in — we'll text or email you the day the doors`,
-          `open with your code.`,
+          `Thanks for joining the Eddie's Flowers founding-members list.`,
+          `We'll reach out the day the doors open so you can be among the`,
+          `first through.`,
           ``,
           `We're opening Summer 2026 at 23 Rindge State Road, Ashburnham, MA.`,
           ``,

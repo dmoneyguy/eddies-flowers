@@ -18,7 +18,7 @@ const VALUES = [
   {
     icon: "/icons/email.svg",
     title: "Built for Ashburnham",
-    body: "We're a North Worcester County shop run by locals. We want to be your neighbor, not your dealer.",
+    body: "Run by locals in North Worcester County. We want to be your neighbor — your favorite Tuesday-afternoon errand.",
   },
 ];
 

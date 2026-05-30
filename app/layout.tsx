@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Poppins, Fraunces, Caveat } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { AgeGateProvider } from "@/components/AgeGateProvider";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
     template: "%s | Eddie's Flowers",
   },
   description:
-    "Eddie's Flowers Dispensary opens Summer 2026 at 23 Rindge State Road, Ashburnham, MA. Join the waitlist and get 10% off your first visit.",
+    "Eddie's Flowers Dispensary opens Summer 2026 at 23 Rindge State Road, Ashburnham, MA. Join the waitlist to be first through the doors.",
   keywords: [
     "Eddie's Flowers",
     "Ashburnham cannabis dispensary",
@@ -47,7 +48,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Eddie's Flowers Dispensary — Coming Summer 2026",
     description:
-      "Ashburnham's new spot for flower, opening Summer 2026. Join the waitlist, get 10% off your first visit.",
+      "Ashburnham's new spot for flower, opening Summer 2026. Join the waitlist to be first through the doors.",
     url: SITE_URL,
     siteName: "Eddie's Flowers",
     type: "website",
@@ -64,7 +65,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Eddie's Flowers — Coming Summer 2026",
-    description: "Ashburnham's new dispensary. Join the waitlist for 10% off opening day.",
+    description: "Ashburnham's new dispensary. Join the founding-members waitlist.",
     images: ["/og.png"],
   },
   icons: {
@@ -133,6 +134,7 @@ export default function RootLayout({
         <a href="#main" className="skip-link">
           Skip to main content
         </a>
+        <AgeGateProvider />
         {children}
         <Analytics />
       </body>
