@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins } from "next/font/google";
+import { Poppins, Fraunces, Caveat } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
@@ -7,6 +7,23 @@ const poppins = Poppins({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
   variable: "--font-poppins",
+  display: "swap",
+});
+
+// Variable serif — used for the dramatic display headlines
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "900"],
+  axes: ["SOFT", "WONK", "opsz"],
+  variable: "--font-fraunces",
+  display: "swap",
+});
+
+// Hand-written signature font for Eddie
+const caveat = Caveat({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  variable: "--font-caveat",
   display: "swap",
 });
 
@@ -75,7 +92,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={poppins.variable}>
+    <html
+      lang="en"
+      className={`${poppins.variable} ${fraunces.variable} ${caveat.variable}`}
+    >
       <head>
         <script
           type="application/ld+json"

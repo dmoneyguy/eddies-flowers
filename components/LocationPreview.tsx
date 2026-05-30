@@ -1,8 +1,9 @@
-// Location preview — address + small Google Maps embed.
-// Maps embed uses the public "embed" URL (no API key required for basic embeds).
-// CSP in next.config.ts already allowlists maps.google.com / www.google.com in frame-src.
+// Location preview — darker charcoal, premium framed map, license badge
+// alongside the address. Big serif H2 mirrors the hero so the page bookends.
 
 import Image from "next/image";
+
+const LICENSE_NUMBER = process.env.NEXT_PUBLIC_LICENSE_NUMBER || "MRN284579";
 
 export function LocationPreview() {
   const address = "23 Rindge State Road, Ashburnham, MA 01430";
@@ -10,27 +11,46 @@ export function LocationPreview() {
   const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(address)}`;
 
   return (
-    <section id="visit" className="bg-charcoal-black px-6 py-20 sm:py-24">
-      <div className="mx-auto grid max-w-5xl gap-10 lg:grid-cols-2 lg:items-center">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-leaf-green">
+    <section
+      id="visit"
+      className="relative isolate overflow-hidden bg-charcoal-deep px-6 py-24 sm:py-32"
+    >
+      {/* Subtle ambient light from top-left */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 -z-10"
+        style={{
+          background:
+            "radial-gradient(circle at 10% 0%, rgba(115,190,68,0.10), transparent 50%), radial-gradient(circle at 100% 100%, rgba(255,208,15,0.05), transparent 60%)",
+        }}
+      />
+
+      <div className="mx-auto grid max-w-6xl gap-14 lg:grid-cols-2 lg:items-center">
+        <div data-reveal>
+          <p className="text-xs font-semibold uppercase tracking-[0.32em] text-leaf-green-soft">
             Where to find us
           </p>
-          <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">
-            Visit us when we open.
+          <h2 className="display mt-4 text-balance text-4xl font-medium text-white sm:text-5xl">
+            Visit us when{" "}
+            <span className="italic font-light text-leaf-green-soft">
+              we open
+            </span>
+            .
           </h2>
 
-          <div className="mt-8 flex items-start gap-4">
+          <div className="mt-10 flex items-start gap-4">
             <Image
               src="/icons/location.svg"
               alt=""
-              width={28}
-              height={28}
+              width={32}
+              height={32}
               className="mt-1 brightness-0 invert"
               aria-hidden="true"
             />
             <div>
-              <p className="text-lg font-semibold text-white">Eddie&apos;s Flowers Dispensary</p>
+              <p className="text-xl font-semibold text-white">
+                Eddie&apos;s Flowers Dispensary
+              </p>
               <p className="mt-1 text-white/70">23 Rindge State Road</p>
               <p className="text-white/70">Ashburnham, MA 01430</p>
             </div>
@@ -40,19 +60,41 @@ export function LocationPreview() {
             href={directionsUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-6 inline-flex items-center gap-2 rounded-full border-2 border-white/20 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:border-leaf-green hover:text-leaf-green"
+            className="mt-8 inline-flex items-center gap-2 rounded-full border border-white/20 px-6 py-3 text-sm font-semibold text-white transition-colors hover:border-leaf-green-soft hover:text-leaf-green-soft"
           >
             Get directions
             <span aria-hidden="true">→</span>
           </a>
+
+          {/* Compact license badge */}
+          <div className="mt-10 inline-flex items-center gap-3 rounded-full border border-leaf-green/30 bg-leaf-green/10 px-4 py-2">
+            <span
+              className="flex h-5 w-5 items-center justify-center rounded-full bg-leaf-green text-[10px] font-bold text-white"
+              aria-hidden="true"
+            >
+              ✓
+            </span>
+            <span className="text-xs font-medium text-white/80">
+              MA Licensed Adult-Use Retailer ·{" "}
+              <span className="font-mono text-white">{LICENSE_NUMBER}</span>{" "}
+              <span className="text-white/50">(Provisional)</span>
+            </span>
+          </div>
         </div>
 
-        <div className="overflow-hidden rounded-2xl border-2 border-white/10 bg-white/5 shadow-lg">
+        <div
+          data-reveal
+          className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-2xl"
+        >
+          {/* Map overlay corner badge */}
+          <div className="absolute left-4 top-4 z-10 rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-charcoal-deep shadow-md">
+            Opening Summer 2026
+          </div>
           <iframe
             src={mapsUrl}
             title="Map showing 23 Rindge State Road, Ashburnham, MA"
             width="100%"
-            height="320"
+            height="380"
             style={{ border: 0 }}
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"

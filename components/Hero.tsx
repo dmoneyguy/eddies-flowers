@@ -1,30 +1,79 @@
-// Hero — first thing visitors see. Charcoal canvas, primary logo at scale,
-// "Coming Summer 2026" framing with a primary CTA button that anchor-jumps
-// to the waitlist section. The 10% founder discount becomes the page's first
-// hard CTA, not just a passive "drop your email" suggestion.
+// Hero — cinematic charcoal canvas with ambient leaf-drift, gradient mesh,
+// and a dramatic serif headline. Heavy visual weight up top so the rest of
+// the page can be quieter and warmer.
 
 import Image from "next/image";
 
+// 5 drifting leaf instances at different sizes, opacities, paths, and timing.
+// Each gets randomized via CSS custom properties — keeps the visual ambient
+// feel without JS or per-frame work.
+const LEAVES = [
+  { left: "8%",  size: 110, opacity: 0.16, duration: 28, delay: 0,   xDrift: 80,  rotation: -12 },
+  { left: "22%", size: 70,  opacity: 0.12, duration: 38, delay: 6,   xDrift: -40, rotation: 8 },
+  { left: "50%", size: 140, opacity: 0.10, duration: 32, delay: 12,  xDrift: 30,  rotation: 22 },
+  { left: "73%", size: 80,  opacity: 0.18, duration: 26, delay: 4,   xDrift: -70, rotation: -18 },
+  { left: "90%", size: 100, opacity: 0.13, duration: 42, delay: 10,  xDrift: 50,  rotation: 14 },
+];
+
 export function Hero() {
   return (
-    <section className="relative isolate overflow-hidden bg-charcoal-black px-6 pt-20 pb-16 sm:pt-28 sm:pb-20">
-      {/* Background texture — single large leaf, very low opacity, off-center */}
+    <section className="hero-canvas relative isolate overflow-hidden px-6 pt-24 pb-20 sm:pt-32 sm:pb-28">
+      {/* Ambient drifting leaves */}
+      {LEAVES.map((leaf, i) => (
+        <span
+          key={i}
+          className="leaf-drift"
+          style={{
+            left: leaf.left,
+            ["--d" as string]: `${leaf.duration}s`,
+            ["--delay" as string]: `${leaf.delay}s`,
+            ["--o" as string]: leaf.opacity,
+            ["--dx" as string]: `${leaf.xDrift}px`,
+            ["--r" as string]: `${leaf.rotation}deg`,
+            ["--s" as string]: 1,
+          }}
+        >
+          <Image
+            src="/icons/cannabis-leaf.svg"
+            alt=""
+            width={leaf.size}
+            height={leaf.size}
+            style={{
+              filter: "brightness(0) invert(1)",
+            }}
+            aria-hidden="true"
+          />
+        </span>
+      ))}
+
+      {/* Single large leaf as faint background watermark */}
       <div
-        className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-end opacity-[0.06]"
+        className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-[0.04]"
         aria-hidden="true"
       >
         <Image
           src="/icons/cannabis-leaf.svg"
           alt=""
-          width={900}
-          height={900}
-          className="translate-x-1/3 scale-150"
+          width={1100}
+          height={1100}
+          className="scale-150"
           priority={false}
         />
       </div>
 
-      <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
+      <div className="relative z-10 mx-auto flex max-w-5xl flex-col items-center text-center">
+        {/* Eyebrow date label with leaf accent and ray-burst halo */}
+        <div data-reveal className="ray-burst mb-6">
+          <p className="inline-flex items-center gap-3 text-sm font-semibold uppercase tracking-[0.32em] text-leaf-green-soft">
+            <span className="h-px w-8 bg-leaf-green/60" aria-hidden="true" />
+            Coming Summer 2026
+            <span className="h-px w-8 bg-leaf-green/60" aria-hidden="true" />
+          </p>
+        </div>
+
+        {/* Logo lockup */}
         <Image
+          data-reveal
           src="/logo-secondary.svg"
           alt="Eddie's Flowers Dispensary"
           width={520}
@@ -33,28 +82,47 @@ export function Hero() {
           className="h-auto w-[260px] sm:w-[360px] md:w-[440px]"
         />
 
-        <p className="mt-10 text-sm font-semibold uppercase tracking-[0.2em] text-leaf-green">
-          Coming Summer 2026
-        </p>
-        <h1 className="mt-3 text-balance text-4xl font-extrabold leading-[1.05] text-white sm:text-5xl md:text-6xl">
-          Ashburnham&apos;s new spot for flower.
+        {/* Dramatic serif headline */}
+        <h1
+          data-reveal
+          className="display mt-10 max-w-3xl text-balance text-5xl font-medium text-white sm:text-6xl md:text-7xl"
+        >
+          Ashburnham&apos;s new spot for{" "}
+          <span className="italic font-light text-leaf-green-soft">flower</span>.
         </h1>
-        <p className="mt-6 max-w-2xl text-balance text-base leading-relaxed text-white/70 sm:text-lg">
-          A welcoming cannabis shop opening Summer 2026 at{" "}
-          <span className="whitespace-nowrap text-white">23 Rindge State Road</span> in Ashburnham, MA.
+
+        {/* Subhead */}
+        <p
+          data-reveal
+          className="mt-6 max-w-2xl text-balance text-base leading-relaxed text-white/70 sm:text-lg"
+        >
+          A welcoming cannabis shop opening at{" "}
+          <span className="whitespace-nowrap text-white">23 Rindge State Road</span>{" "}
+          in Ashburnham, MA. Curated flower, honest answers, no marketing-speak.
         </p>
 
+        {/* Primary CTA with leaf-glow */}
         <a
+          data-reveal
           href="#waitlist"
-          className="mt-8 inline-flex items-center gap-2 rounded-full bg-leaf-green px-7 py-3.5 text-base font-semibold text-white shadow-sm transition-colors hover:bg-leaf-green/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green sm:text-lg"
+          className="glow-leaf mt-10 inline-flex items-center gap-2 rounded-full bg-leaf-green px-8 py-4 text-base font-semibold text-white sm:text-lg"
         >
           Get 10% off your first visit
           <span aria-hidden="true">→</span>
         </a>
-        <p className="mt-3 text-xs uppercase tracking-wider text-white/50">
-          Join the waitlist · No spam · One email when we open
+        <p
+          data-reveal
+          className="mt-4 text-xs uppercase tracking-[0.2em] text-white/40"
+        >
+          Join the waitlist · No spam · One note when we open
         </p>
       </div>
+
+      {/* Bottom-fade vignette so the marquee blends in cleanly */}
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-charcoal-deep"
+        aria-hidden="true"
+      />
     </section>
   );
 }

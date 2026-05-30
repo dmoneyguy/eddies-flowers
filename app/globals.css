@@ -2,15 +2,17 @@
 
 /* ============================================================
    Eddie's Flowers Dispensary — brand tokens
-   Locked from the brand book (Apr 2026 — infibrain).
-   Color values are PMS-anchored: 360C / 109C / Black C / 7516C / 7500C.
    ============================================================ */
 @theme {
   --color-leaf-green: #73be44;
+  --color-leaf-green-soft: #8ed05f;
+  --color-leaf-green-deep: #5a9a30;
   --color-sunshine-yellow: #ffd00f;
   --color-charcoal-black: #2b2b2b;
+  --color-charcoal-deep: #1a1a1a;
   --color-rustic-brown: #9a592c;
   --color-warm-beige: #e6d3a3;
+  --color-cream: #f8f1e0;
 
   --color-bg: #ffffff;
   --color-bg-dark: #2b2b2b;
@@ -20,6 +22,8 @@
   --color-border: #e5e5e5;
 
   --font-sans: var(--font-poppins), system-ui, sans-serif;
+  --font-serif: var(--font-fraunces), Georgia, serif;
+  --font-script: var(--font-caveat), "Brush Script MT", cursive;
 }
 
 /* Base resets, accessibility helpers */
@@ -47,18 +51,182 @@ body {
   z-index: 100;
   text-decoration: none;
 }
-.skip-link:focus {
-  top: 0;
-}
+.skip-link:focus { top: 0; }
 
-/* Focus ring — high-contrast, brand-aligned */
+/* Focus ring */
 :focus-visible {
   outline: 2px solid var(--color-leaf-green);
   outline-offset: 2px;
   border-radius: 2px;
 }
 
-/* Reduce motion if user prefers */
+/* ============================================================
+   Grain / paper texture overlay
+   Pure SVG, no image asset. Subtle noise that gives sections depth.
+   ============================================================ */
+.grain::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  mix-blend-mode: overlay;
+}
+
+.paper {
+  position: relative;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(255, 255, 255, 0.4) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(154, 89, 44, 0.06) 0%, transparent 50%),
+    var(--color-warm-beige);
+}
+
+.paper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.6  0 0 0 0 0.4  0 0 0 0 0.2  0 0 0 0.8 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+/* ============================================================
+   Hero — animated dark canvas
+   ============================================================ */
+.hero-canvas {
+  position: relative;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(115, 190, 68, 0.10) 0%, transparent 40%),
+    radial-gradient(circle at 85% 80%, rgba(255, 208, 15, 0.06) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(154, 89, 44, 0.04) 0%, transparent 60%),
+    linear-gradient(135deg, var(--color-charcoal-deep) 0%, var(--color-charcoal-black) 50%, #222 100%);
+}
+
+.hero-canvas::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  mix-blend-mode: overlay;
+}
+
+/* ============================================================
+   Ambient leaf-drift animation in hero
+   ============================================================ */
+@keyframes leaf-drift-up {
+  0% {
+    transform: translate3d(var(--x, 0), 100vh, 0) rotate(var(--r, 0deg)) scale(var(--s, 1));
+    opacity: 0;
+  }
+  10% { opacity: var(--o, 0.18); }
+  90% { opacity: var(--o, 0.18); }
+  100% {
+    transform: translate3d(calc(var(--x, 0) + var(--dx, 60px)), -120vh, 0) rotate(calc(var(--r, 0deg) + 120deg)) scale(var(--s, 1));
+    opacity: 0;
+  }
+}
+
+.leaf-drift {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform, opacity;
+  animation: leaf-drift-up var(--d, 22s) linear infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+/* ============================================================
+   Glow + accents
+   ============================================================ */
+.glow-leaf {
+  box-shadow:
+    0 6px 18px rgba(115, 190, 68, 0.35),
+    0 1px 0 rgba(255, 255, 255, 0.15) inset;
+  transition: box-shadow 220ms ease, transform 220ms ease;
+}
+.glow-leaf:hover {
+  box-shadow:
+    0 10px 28px rgba(115, 190, 68, 0.55),
+    0 1px 0 rgba(255, 255, 255, 0.25) inset;
+  transform: translateY(-1px);
+}
+
+/* Radial ray-burst behind labels — subtle sun behind */
+.ray-burst {
+  position: relative;
+  display: inline-block;
+}
+.ray-burst::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 220%;
+  height: 220%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(115, 190, 68, 0.18) 0%, transparent 60%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ============================================================
+   Headline typography
+   ============================================================ */
+.display {
+  font-family: var(--font-serif);
+  font-feature-settings: "ss01", "ss02";
+  letter-spacing: -0.02em;
+  line-height: 0.98;
+}
+
+.script {
+  font-family: var(--font-script);
+  letter-spacing: 0;
+}
+
+/* Drop-cap treatment for letters */
+.drop-cap::first-letter {
+  font-family: var(--font-serif);
+  font-size: 3.2em;
+  float: left;
+  line-height: 0.85;
+  margin: 0.1em 0.12em 0 0;
+  color: var(--color-rustic-brown);
+  font-weight: 600;
+}
+
+/* ============================================================
+   Marquee (brand band)
+   ============================================================ */
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 36s linear infinite;
+}
+
+/* ============================================================
+   Scroll reveal — IntersectionObserver-driven via [data-reveal]
+   ============================================================ */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 700ms cubic-bezier(0.2, 0.7, 0.2, 1), transform 700ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ============================================================
+   Reduced motion fallback
+   ============================================================ */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -68,4 +236,6 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+  .leaf-drift, .marquee-track { display: none !important; }
+  [data-reveal] { opacity: 1; transform: none; }
 }
