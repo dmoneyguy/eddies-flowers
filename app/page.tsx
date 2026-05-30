@@ -1,15 +1,15 @@
-// Coming Soon landing — full composition. Order matters visually:
-//   Hero (charcoal cinematic)
-//   → Marquee (charcoal brand band, transitions out of hero)
-//   → FounderNote (warm paper)
-//   → WaitlistSection (cream + form)
-//   → LocationPreview (charcoal again — bookends with hero)
+// Coming Soon landing — v1.3 composition.
+//   Hero (alive)
+//   → StickyMarquee
+//   → Values (3-card grid)
+//   → FounderNote
+//   → WaitlistSection
+//   → LocationPreview
 //   → Footer
-// ScrollReveal is a mount-once client component that promotes [data-reveal]
-// elements as they scroll into view.
 
 import { Hero } from "@/components/Hero";
-import { Marquee } from "@/components/Marquee";
+import { StickyMarquee } from "@/components/StickyMarquee";
+import { Values } from "@/components/Values";
 import { FounderNote } from "@/components/FounderNote";
 import { WaitlistSection } from "@/components/WaitlistSection";
 import { LocationPreview } from "@/components/LocationPreview";
@@ -21,7 +21,8 @@ export default function Home() {
     <>
       <main id="main">
         <Hero />
-        <Marquee />
+        <StickyMarquee />
+        <Values />
         <FounderNote />
         <WaitlistSection />
         <LocationPreview />
