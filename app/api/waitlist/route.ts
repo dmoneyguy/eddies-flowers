@@ -1,15 +1,15 @@
-// POST /api/waitlist — handles email-capture submissions from the Coming Soon page.
+// POST /api/waitlist — handles waitlist submissions from the Coming Soon page.
 //
 // Flow:
-//   1. Validate payload (Zod): valid email, optional name, honeypot empty
+//   1. Validate payload (Zod): email and/or phone, optional name, honeypot empty
 //   2. Rate-limit per source IP (5/hour, in-memory)
 //   3. INSERT row into control_plane.eddies_flowers_leads (source='launch_waitlist')
-//   4. Fire acknowledgment email to submitter (Resend)
-//   5. Fire internal notification to NOTIFICATION_EMAIL (Resend)
+//   4. Fire acknowledgment email (only if email present + Resend configured)
+//   5. Fire internal notification email
 //   6. Return { ok: true }
 //
-// Errors are logged but the user-facing message stays generic to avoid
-// information leakage about email duplicates / database state.
+// Email send failures do NOT roll back the DB insert — the lead is captured
+// either way. Resend failures are logged but invisible to the user.
 
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
@@ -20,21 +20,50 @@ import { resend, FROM, NOTIFICATION_EMAIL } from "@/lib/email/resend";
 
 export const runtime = "nodejs";
 
-const schema = z.object({
-  email: z.string().email().max(254),
-  name: z.string().max(120).optional().nullable(),
-  website: z.string().max(0).optional().nullable(), // honeypot — must be empty
-});
+const schema = z
+  .object({
+    email: z
+      .string()
+      .max(254)
+      .optional()
+      .nullable()
+      .transform((v) => v?.trim() || ""),
+    phone: z
+      .string()
+      .max(20)
+      .optional()
+      .nullable()
+      .transform((v) => v?.trim() || ""),
+    name: z
+      .string()
+      .max(120)
+      .optional()
+      .nullable()
+      .transform((v) => v?.trim() || ""),
+    website: z.string().max(0).optional().nullable(), // honeypot — must be empty
+  })
+  .refine(
+    (d) => d.email !== "" || d.phone !== "",
+    "Please provide an email or phone number.",
+  )
+  .refine(
+    (d) => d.email === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email),
+    "Please enter a valid email address.",
+  );
 
 function extractIp(req: NextRequest): string {
-  // Vercel forwards the client IP in x-forwarded-for (comma-separated chain).
   const xff = req.headers.get("x-forwarded-for");
   if (xff) return xff.split(",")[0]!.trim();
   return req.headers.get("x-real-ip") || "unknown";
 }
 
+function normalizePhone(raw: string): string {
+  // Strip everything except digits and a leading +; keep submission readable
+  // in the dashboard, leave full normalization for a downstream job.
+  return raw.replace(/[^\d+]/g, "");
+}
+
 export async function POST(req: NextRequest) {
-  // 1. Parse + validate body
   let body: unknown;
   try {
     body = await req.json();
@@ -47,16 +76,15 @@ export async function POST(req: NextRequest) {
 
   const parsed = schema.safeParse(body);
   if (!parsed.success) {
-    // Honeypot fail OR validation fail — return generic to not tip off bots
     return NextResponse.json(
-      { ok: false, error: "Please check your email and try again." },
+      { ok: false, error: "Please check your details and try again." },
       { status: 400 },
     );
   }
-  const { email, name } = parsed.data;
-  const emailNormalized = email.toLowerCase().trim();
+  const { email: emailRaw, name, phone: phoneRaw } = parsed.data;
+  const emailNormalized = emailRaw.toLowerCase();
+  const phoneNormalized = phoneRaw ? normalizePhone(phoneRaw) : "";
 
-  // 2. Rate limit per IP
   const ip = extractIp(req);
   const rl = checkRateLimit(ip);
   if (!rl.ok) {
@@ -69,26 +97,24 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // 3. Insert lead row. We do NOT enforce email-uniqueness in the schema (per the
-  // spec — same person joining twice from different sessions is a no-op signal,
-  // not an error). The lower(email) index makes the eventual dedupe query fast.
   const userAgent = req.headers.get("user-agent");
   try {
     await db.insert(eddiesFlowersLeads).values({
       source: "launch_waitlist",
-      email: emailNormalized,
-      name: name?.trim() || null,
-      consentedToMarketing: true, // implied by submitting the form per microcopy
+      email: emailNormalized || null,
+      phone: phoneNormalized || null,
+      name: name || null,
+      consentedToMarketing: true,
       ageGateAttested: false,
       ipAddress: ip === "unknown" ? null : ip,
       userAgent,
       status: "new",
       metadata: {
         path: req.headers.get("referer") || null,
+        founder_discount: "10pct_first_visit",
       },
     });
   } catch (err) {
-    // Failure to insert is fatal — don't pretend success. Log server-side.
     // eslint-disable-next-line no-console
     console.error("[waitlist] DB insert failed:", err);
     return NextResponse.json(
@@ -97,50 +123,55 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // 4 + 5. Send emails. Failures here do NOT roll back the DB insert — the
-  // lead is captured either way; we just lose the acknowledgment/notification
-  // for this one submission. Log loud so we notice in Vercel logs.
-  await Promise.allSettled([
-    resend.emails.send({
-      from: FROM,
-      to: emailNormalized,
-      subject: "We'll be in touch — Eddie's Flowers",
-      text: [
-        `Hi${name ? " " + name.trim() : ""},`,
-        ``,
-        `Thanks for putting your name down. We're putting the finishing touches`,
-        `on Eddie's Flowers Dispensary at 23 Rindge State Road, Ashburnham. I'll`,
-        `email you the day the doors open.`,
-        ``,
-        `If this signup wasn't you, just ignore this — we won't email you again`,
-        `unless you ask us to.`,
-        ``,
-        `— Eddie`,
-        ``,
-        `Eddie's Flowers Dispensary`,
-        `MA Licensed Adult-Use Marijuana Retailer #MRN284579 (Provisional)`,
-        `https://eddiesflower.com`,
-      ].join("\n"),
-    }),
+  // Outbound emails — best-effort, never block the response.
+  const sendOps: Promise<unknown>[] = [];
+  if (emailNormalized) {
+    sendOps.push(
+      resend.emails.send({
+        from: FROM,
+        to: emailNormalized,
+        subject: "You're on the list — Eddie's Flowers",
+        text: [
+          `Hi${name ? " " + name : ""},`,
+          ``,
+          `Thanks for joining the Eddie's Flowers waitlist. Your 10% founder`,
+          `discount is locked in — we'll text or email you the day the doors`,
+          `open with your code.`,
+          ``,
+          `We're opening Summer 2026 at 23 Rindge State Road, Ashburnham, MA.`,
+          ``,
+          `If this wasn't you, just ignore this — we won't email you again`,
+          `unless you ask.`,
+          ``,
+          `— Eddie`,
+          ``,
+          `Eddie's Flowers Dispensary`,
+          `MA Licensed Adult-Use Marijuana Retailer #MRN284579 (Provisional)`,
+          `https://eddiesflower.com`,
+        ].join("\n"),
+      }),
+    );
+  }
+  sendOps.push(
     resend.emails.send({
       from: FROM,
       to: NOTIFICATION_EMAIL,
-      subject: `New waitlist signup: ${emailNormalized}`,
+      subject: `New waitlist signup: ${emailNormalized || phoneNormalized || "(unknown)"}`,
       text: [
         `New launch waitlist signup for Eddie's Flowers.`,
         ``,
-        `Email:    ${emailNormalized}`,
-        `Name:     ${name?.trim() || "(not provided)"}`,
+        `Email:    ${emailNormalized || "(not provided)"}`,
+        `Phone:    ${phoneNormalized || "(not provided)"}`,
+        `Name:     ${name || "(not provided)"}`,
         `IP:       ${ip}`,
         `Agent:    ${userAgent || "(unknown)"}`,
         `Source:   launch_waitlist`,
         `Time:     ${new Date().toISOString()}`,
-        ``,
-        `View leads: SELECT * FROM control_plane.eddies_flowers_leads`,
-        `             WHERE source = 'launch_waitlist' ORDER BY submitted_at DESC LIMIT 20;`,
       ].join("\n"),
     }),
-  ]).then((results) => {
+  );
+
+  await Promise.allSettled(sendOps).then((results) => {
     for (const r of results) {
       if (r.status === "rejected") {
         // eslint-disable-next-line no-console

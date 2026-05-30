@@ -1,12 +1,14 @@
 "use client";
 
-// Email capture form — single email field + optional name, honeypot for bots,
-// optimistic submit with friendly states. POSTs to /api/waitlist (Part 1D).
+// Email + phone capture form. SMS-first cannabis brands convert harder on
+// phone than email — both fields are offered but only one is required.
+// Honeypot for bots, optimistic submit, fires a Vercel Analytics event on
+// success so we can attribute waitlist conversions to traffic sources.
 //
 // State machine: idle → submitting → success | error
-// Spam defense: hidden 'website' honeypot field; bots fill it, humans don't.
 
 import { useState, type FormEvent } from "react";
+import { track } from "@vercel/analytics";
 
 type State =
   | { kind: "idle" }
@@ -25,10 +27,17 @@ export function WaitlistForm() {
     const fd = new FormData(form);
     const email = String(fd.get("email") || "").trim();
     const name = String(fd.get("name") || "").trim();
+    const phone = String(fd.get("phone") || "").trim();
     const website = String(fd.get("website") || ""); // honeypot
 
-    // Client-side guard. Real validation happens server-side.
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    if (!email && !phone) {
+      setState({
+        kind: "error",
+        message: "Please enter your email or phone — at least one.",
+      });
+      return;
+    }
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setState({ kind: "error", message: "Please enter a valid email address." });
       return;
     }
@@ -44,7 +53,7 @@ export function WaitlistForm() {
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, name, website }),
+        body: JSON.stringify({ email, name, phone, website }),
       });
 
       const data: { ok?: boolean; error?: string } = await res
@@ -52,6 +61,16 @@ export function WaitlistForm() {
         .catch(() => ({ ok: false, error: "Network error" }));
 
       if (res.ok && data.ok) {
+        // Fire analytics — lets us measure waitlist conversion vs. raw visits
+        try {
+          track("waitlist_signup", {
+            has_email: Boolean(email),
+            has_phone: Boolean(phone),
+            has_name: Boolean(name),
+          });
+        } catch {
+          // Analytics is best-effort, never block the success state.
+        }
         setState({ kind: "success" });
         form.reset();
       } else {
@@ -77,10 +96,14 @@ export function WaitlistForm() {
         className="rounded-2xl border-2 border-leaf-green/30 bg-leaf-green/10 p-8 text-center"
       >
         <p className="text-2xl font-bold text-charcoal-black">
-          Thanks — we&apos;ll be in touch.
+          You&apos;re on the list. 🌿
         </p>
-        <p className="mt-2 text-charcoal-black/70">
-          You&apos;re on the list. We&apos;ll email you the day the doors open.
+        <p className="mt-3 text-base text-charcoal-black/80">
+          Your <span className="font-semibold text-leaf-green">10% founder discount</span>{" "}
+          is locked in. We&apos;ll reach out the day the doors open with your code.
+        </p>
+        <p className="mt-4 text-xs text-charcoal-black/50">
+          — Eddie
         </p>
       </div>
     );
@@ -93,7 +116,7 @@ export function WaitlistForm() {
       className="space-y-4"
       aria-describedby="waitlist-microcopy"
     >
-      {/* Honeypot — visually hidden, off-screen, autocomplete off. Bots fill, humans don't. */}
+      {/* Honeypot — visually hidden, off-screen, autocomplete off. */}
       <div
         aria-hidden="true"
         style={{
@@ -140,17 +163,35 @@ export function WaitlistForm() {
           htmlFor="email"
           className="mb-2 block text-sm font-semibold text-charcoal-black"
         >
-          Email <span className="font-normal text-charcoal-black/50">(required)</span>
+          Email
         </label>
         <input
           type="email"
           id="email"
           name="email"
-          required
           autoComplete="email"
           maxLength={254}
           className="w-full rounded-lg border-2 border-charcoal-black/15 bg-white px-4 py-3 text-base text-charcoal-black placeholder:text-charcoal-black/40 focus:border-leaf-green focus:outline-none"
           placeholder="you@example.com"
+        />
+      </div>
+
+      <div>
+        <label
+          htmlFor="phone"
+          className="mb-2 block text-sm font-semibold text-charcoal-black"
+        >
+          Phone <span className="font-normal text-charcoal-black/50">(optional, for opening-day text)</span>
+        </label>
+        <input
+          type="tel"
+          id="phone"
+          name="phone"
+          autoComplete="tel"
+          maxLength={20}
+          inputMode="tel"
+          className="w-full rounded-lg border-2 border-charcoal-black/15 bg-white px-4 py-3 text-base text-charcoal-black placeholder:text-charcoal-black/40 focus:border-leaf-green focus:outline-none"
+          placeholder="(978) 555-0123"
         />
       </div>
 
@@ -159,7 +200,7 @@ export function WaitlistForm() {
         disabled={state.kind === "submitting"}
         className="w-full rounded-full bg-leaf-green px-6 py-4 text-base font-semibold text-white shadow-sm transition-colors hover:bg-leaf-green/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green disabled:cursor-not-allowed disabled:opacity-60 sm:text-lg"
       >
-        {state.kind === "submitting" ? "Adding you…" : "Notify me when you open"}
+        {state.kind === "submitting" ? "Adding you…" : "Lock in my 10% off"}
       </button>
 
       {state.kind === "error" && (
@@ -169,7 +210,8 @@ export function WaitlistForm() {
       )}
 
       <p id="waitlist-microcopy" className="text-xs text-charcoal-black/60">
-        We&apos;ll only email you about Eddie&apos;s Flowers updates. Unsubscribe anytime.
+        By submitting you agree we can email or text you about Eddie&apos;s Flowers
+        opening. Unsubscribe anytime. We will never sell or share your info.
       </p>
     </form>
   );
