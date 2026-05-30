@@ -14,7 +14,7 @@ const poppins = Poppins({
 const fraunces = Fraunces({
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "900"],
-  axes: ["SOFT", "WONK", "opsz"],
+  style: ["normal", "italic"],
   variable: "--font-fraunces",
   display: "swap",
 });
