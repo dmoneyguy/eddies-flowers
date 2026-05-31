@@ -1,0 +1,13 @@
+{
+  "name": "Eddie's Flowers Dispensary",
+  "short_name": "Eddie's Flowers",
+  "description": "Massachusetts licensed adult-use cannabis retailer opening soon in Ashburnham.",
+  "start_url": "/",
+  "display": "minimal-ui",
+  "background_color": "#2B2B2B",
+  "theme_color": "#73BE44",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
