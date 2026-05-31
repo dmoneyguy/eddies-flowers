@@ -27,7 +27,7 @@ export function FounderNote() {
 
           <p>
             After a long road, we&apos;re almost ready. Eddie&apos;s Flowers
-            Dispensary opens Summer 2026 at 23 Rindge State Road, right here
+            Dispensary opens soon at 23 Rindge State Road, right here
             in Ashburnham.
           </p>
 

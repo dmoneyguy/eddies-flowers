@@ -88,7 +88,7 @@ export function LocationPreview() {
         >
           {/* Map overlay corner badge */}
           <div className="absolute left-4 top-4 z-10 rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-charcoal-deep shadow-md">
-            Opening Summer 2026
+            Opening Soon
           </div>
           <iframe
             src={mapsUrl}

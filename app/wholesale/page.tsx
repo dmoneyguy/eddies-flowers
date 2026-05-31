@@ -5,7 +5,7 @@ import { LeadForm } from "@/components/LeadForm";
 export const metadata: Metadata = {
   title: "Wholesale & Brand Partnerships",
   description:
-    "Wholesale and brand-partnership inquiries for Eddie's Flowers Dispensary, opening Summer 2026 in Ashburnham, MA.",
+    "Wholesale and brand-partnership inquiries for Eddie's Flowers Dispensary, opening soon in Ashburnham, MA.",
 };
 
 export default function Wholesale() {

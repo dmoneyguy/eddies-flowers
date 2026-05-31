@@ -8,7 +8,7 @@ interface MarqueeProps {
 
 const DEFAULT_ITEMS = [
   "Eddie's Flowers",
-  "Coming Summer 2026",
+  "Opening Soon",
   "23 Rindge State Road",
   "Ashburnham · MA",
   "MA Licensed Adult-Use Retailer",

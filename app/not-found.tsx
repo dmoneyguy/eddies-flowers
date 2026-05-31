@@ -36,7 +36,7 @@ export default function NotFound() {
       </h1>
       <p className="mt-6 max-w-md text-balance text-base text-white/70 sm:text-lg">
         The page you were looking for isn&apos;t here yet — but we&apos;re working on it.
-        Eddie&apos;s Flowers Dispensary opens Summer 2026 in Ashburnham, MA.
+        Eddie&apos;s Flowers Dispensary opens soon in Ashburnham, MA.
       </p>
 
       <div className="mt-10 flex flex-wrap items-center justify-center gap-4">

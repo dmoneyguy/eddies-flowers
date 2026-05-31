@@ -137,7 +137,7 @@ export async function POST(req: NextRequest) {
           `We'll reach out the day the doors open so you can be among the`,
           `first through.`,
           ``,
-          `We're opening Summer 2026 at 23 Rindge State Road, Ashburnham, MA.`,
+          `We're opening soon at 23 Rindge State Road, Ashburnham, MA.`,
           ``,
           `If this wasn't you, just ignore this — we won't email you again`,
           `unless you ask.`,

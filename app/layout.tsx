@@ -33,11 +33,11 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://eddiesflower.com";
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: "Eddie's Flowers Dispensary — Coming Summer 2026 to Ashburnham, MA",
+    default: "Eddie's Flowers Dispensary — Coming Soon to Ashburnham, MA",
     template: "%s | Eddie's Flowers",
   },
   description:
-    "Eddie's Flowers Dispensary opens Summer 2026 at 23 Rindge State Road, Ashburnham, MA. Join the waitlist to be first through the doors.",
+    "Eddie's Flowers Dispensary opens soon at 23 Rindge State Road, Ashburnham, MA. Join the waitlist to be first through the doors.",
   keywords: [
     "Eddie's Flowers",
     "Ashburnham cannabis dispensary",
@@ -46,9 +46,9 @@ export const metadata: Metadata = {
     "MRN284579",
   ],
   openGraph: {
-    title: "Eddie's Flowers Dispensary — Coming Summer 2026",
+    title: "Eddie's Flowers Dispensary — Coming Soon",
     description:
-      "Ashburnham's new spot for flower, opening Summer 2026. Join the waitlist to be first through the doors.",
+      "Ashburnham's new spot for flower. Join the waitlist to be first through the doors.",
     url: SITE_URL,
     siteName: "Eddie's Flowers",
     type: "website",
@@ -58,13 +58,13 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Eddie's Flowers Dispensary — Coming Summer 2026 to Ashburnham, MA",
+        alt: "Eddie's Flowers Dispensary — Coming Soon to Ashburnham, MA",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Eddie's Flowers — Coming Summer 2026",
+    title: "Eddie's Flowers — Coming Soon",
     description: "Ashburnham's new dispensary. Join the founding-members waitlist.",
     images: ["/og.png"],
   },
@@ -106,7 +106,7 @@ export default function RootLayout({
               "@type": "Store",
               name: "Eddie's Flowers Dispensary",
               description:
-                "Massachusetts licensed adult-use cannabis retailer opening Summer 2026 in Ashburnham.",
+                "Massachusetts licensed adult-use cannabis retailer opening soon in Ashburnham.",
               url: SITE_URL,
               image: `${SITE_URL}/og.png`,
               address: {
@@ -119,8 +119,6 @@ export default function RootLayout({
               },
               areaServed: "Massachusetts",
               priceRange: "$$",
-              openingDate: "2026-06-01",
-              foundingDate: "2026",
               parentOrganization: {
                 "@type": "Organization",
                 name: "Legacy Operations",

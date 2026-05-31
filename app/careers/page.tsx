@@ -5,7 +5,7 @@ import { LeadForm } from "@/components/LeadForm";
 export const metadata: Metadata = {
   title: "Careers",
   description:
-    "Join the team at Eddie's Flowers Dispensary in Ashburnham, MA. We're hiring budtenders, keyholders, and cannabis techs for opening Summer 2026.",
+    "Join the team at Eddie's Flowers Dispensary in Ashburnham, MA. We're hiring budtenders, keyholders, and cannabis techs for opening soon.",
 };
 
 export default function Careers() {
@@ -22,7 +22,7 @@ export default function Careers() {
             </h1>
             <div className="mt-6 space-y-4 text-lg text-charcoal-black/80">
               <p>
-                We&apos;re hiring for opening Summer 2026 in Ashburnham. We&apos;re
+                We&apos;re hiring for opening soon in Ashburnham. We&apos;re
                 looking for folks who like people, work hard, and want to learn the
                 Massachusetts cannabis industry from the ground up.
               </p>

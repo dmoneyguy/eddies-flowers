@@ -5,7 +5,7 @@ import { LeadForm } from "@/components/LeadForm";
 export const metadata: Metadata = {
   title: "Press",
   description:
-    "Press, media, and partnership inquiries for Eddie's Flowers Dispensary, opening Summer 2026 in Ashburnham, MA.",
+    "Press, media, and partnership inquiries for Eddie's Flowers Dispensary, opening soon in Ashburnham, MA.",
 };
 
 export default function Press() {
@@ -30,7 +30,7 @@ export default function Press() {
               <ul className="ml-6 list-disc space-y-1 text-base">
                 <li>Massachusetts Licensed Adult-Use Retailer #MRN284579 (Provisional)</li>
                 <li>Location: 23 Rindge State Road, Ashburnham, MA 01430</li>
-                <li>Opening: Summer 2026</li>
+                <li>Opening: soon</li>
                 <li>Operator: Legacy Operations</li>
               </ul>
               <p>
