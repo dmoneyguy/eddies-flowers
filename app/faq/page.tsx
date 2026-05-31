@@ -14,6 +14,10 @@ const FAQ = [
     a: "23 Rindge State Road, Ashburnham, MA 01430. We're a neighborhood dispensary serving Ashburnham, Winchendon, Gardner, Fitchburg, and the surrounding North Worcester County towns. Phone: (978) 883-4026.",
   },
   {
+    q: "What dispensaries are near Ashburnham, MA?",
+    a: "Eddie's Flowers is the only dispensary in Ashburnham town limits — opening soon at 23 Rindge State Road. The closest other dispensaries are United Cultivation in Ashby (about 5 miles) and Bud Barn in Winchendon (about 10 miles). For folks coming down from New Hampshire, Eddie's is the closest Massachusetts dispensary to the Rindge, NH border.",
+  },
+  {
     q: "What are Eddie's Flowers hours?",
     a: "Our planned operating hours are 8:30 AM to 10:00 PM, daily. Hours will be confirmed when we open.",
   },

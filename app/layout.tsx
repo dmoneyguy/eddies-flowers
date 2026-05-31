@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     template: "%s | Eddie's Flowers",
   },
   description:
-    "Eddie's Flowers Dispensary opens soon at 23 Rindge State Road, Ashburnham, MA. Join the waitlist to be first through the doors.",
+    "The only dispensary in Ashburnham, MA. Eddie's Flowers opens soon at 23 Rindge State Road. Join the waitlist to be first through the doors.",
   keywords: [
     "Eddie's Flowers",
     "Ashburnham cannabis dispensary",
@@ -116,7 +116,7 @@ export default function RootLayout({
                   name: "Eddie's Flowers Dispensary",
                   alternateName: ["Eddie's Flowers", "Eddies Flowers Dispensary"],
                   description:
-                    "Massachusetts licensed adult-use cannabis retailer opening soon in Ashburnham, MA. Curated flower, honest answers, no marketing-speak.",
+                    "The only adult-use cannabis dispensary in Ashburnham, MA. Massachusetts licensed (MRN284579), opening soon at 23 Rindge State Road. Curated flower, honest answers, no marketing-speak.",
                   url: SITE_URL,
                   logo: `${SITE_URL}/icon-512.png`,
                   image: `${SITE_URL}/og.png`,

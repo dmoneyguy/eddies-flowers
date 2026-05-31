@@ -104,10 +104,23 @@ export function Hero() {
           in Ashburnham, MA. Curated flower, honest answers, no marketing-speak.
         </p>
 
+        {/* Factual positioning line — voice-matched serif italic, leaf-green-soft on "only" */}
+        <p
+          data-enter
+          style={{ ["--enter-delay" as string]: "540ms" }}
+          className="display mt-4 max-w-xl text-balance text-xl font-light italic leading-tight text-white/85 sm:text-2xl"
+        >
+          The{" "}
+          <span className="not-italic font-medium text-leaf-green-soft">
+            only
+          </span>{" "}
+          dispensary in Ashburnham, MA
+        </p>
+
         {/* Primary CTA — glow + magnetic */}
         <div
           data-enter
-          style={{ ["--enter-delay" as string]: "540ms" }}
+          style={{ ["--enter-delay" as string]: "680ms" }}
           className="mt-10 flex flex-col items-center"
         >
           <a

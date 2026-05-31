@@ -1,7 +1,8 @@
 # Eddie's Flowers Dispensary
 
-> A Massachusetts-licensed adult-use cannabis dispensary opening in Ashburnham, MA.
-> Curated flower, honest answers, no marketing-speak. Run by locals for locals.
+> The only adult-use cannabis dispensary in Ashburnham, MA. Massachusetts-licensed
+> (MRN284579), opening soon at 23 Rindge State Road. Curated flower, honest answers,
+> no marketing-speak. Run by locals for locals.
 
 ## About
 
@@ -16,6 +17,7 @@ Massachusetts cultivators, edibles, concentrates, vapes, and pre-rolls.
 
 ## Status
 
+- Positioning: The only adult-use cannabis dispensary physically located in Ashburnham, MA
 - License status: Provisional, MRN284579
 - Location: 23 Rindge State Road, Ashburnham, MA 01430
 - Phone: (978) 883-4026

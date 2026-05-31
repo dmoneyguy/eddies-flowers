@@ -11,6 +11,7 @@ const DEFAULT_ITEMS = [
   "Opening Soon",
   "23 Rindge State Road",
   "Ashburnham · MA",
+  "Ashburnham's only dispensary",
   "MA Licensed Adult-Use Retailer",
   "Founding Members First Through The Doors",
 ];
