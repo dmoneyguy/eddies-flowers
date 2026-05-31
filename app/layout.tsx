@@ -78,6 +78,7 @@ export const metadata: Metadata = {
     shortcut: ["/icon-32.png"],
   },
   manifest: "/manifest.webmanifest",
+  alternates: { canonical: SITE_URL },
   robots: { index: true, follow: true },
 };
 
@@ -103,27 +104,63 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "Store",
-              name: "Eddie's Flowers Dispensary",
-              description:
-                "Massachusetts licensed adult-use cannabis retailer opening soon in Ashburnham.",
-              url: SITE_URL,
-              image: `${SITE_URL}/og.png`,
-              address: {
-                "@type": "PostalAddress",
-                streetAddress: "23 Rindge State Road",
-                addressLocality: "Ashburnham",
-                addressRegion: "MA",
-                postalCode: "01430",
-                addressCountry: "US",
-              },
-              areaServed: "Massachusetts",
-              priceRange: "$$",
-              parentOrganization: {
-                "@type": "Organization",
-                name: "Legacy Operations",
-                url: "https://thelegacyops.com",
-              },
+              "@graph": [
+                {
+                  "@type": "Store",
+                  "@id": `${SITE_URL}/#store`,
+                  name: "Eddie's Flowers Dispensary",
+                  alternateName: ["Eddie's Flowers", "Eddies Flowers Dispensary"],
+                  description:
+                    "Massachusetts licensed adult-use cannabis retailer opening soon in Ashburnham, MA. Curated flower, honest answers, no marketing-speak.",
+                  url: SITE_URL,
+                  logo: `${SITE_URL}/icon-512.png`,
+                  image: `${SITE_URL}/og.png`,
+                  telephone: "",
+                  address: {
+                    "@type": "PostalAddress",
+                    streetAddress: "23 Rindge State Road",
+                    addressLocality: "Ashburnham",
+                    addressRegion: "MA",
+                    postalCode: "01430",
+                    addressCountry: "US",
+                  },
+                  geo: {
+                    "@type": "GeoCoordinates",
+                    latitude: 42.6376,
+                    longitude: -71.9134,
+                  },
+                  areaServed: [
+                    { "@type": "City", name: "Ashburnham" },
+                    { "@type": "City", name: "Winchendon" },
+                    { "@type": "City", name: "Gardner" },
+                    { "@type": "City", name: "Fitchburg" },
+                    { "@type": "AdministrativeArea", name: "Worcester County" },
+                    { "@type": "State", name: "Massachusetts" },
+                  ],
+                  currenciesAccepted: "USD",
+                  paymentAccepted: "Cash, Debit",
+                  priceRange: "$$",
+                  identifier: { "@type": "PropertyValue", propertyID: "MA-CCC-License", value: "MRN284579" },
+                  parentOrganization: { "@id": `${SITE_URL}/#org` },
+                },
+                {
+                  "@type": "Organization",
+                  "@id": `${SITE_URL}/#org`,
+                  name: "Legacy Operations",
+                  url: "https://thelegacyops.com",
+                  logo: `${SITE_URL}/icon-512.png`,
+                  description:
+                    "Vertically integrated multi-state cannabis operator across Massachusetts, Connecticut, and New York. Operator of Eddie's Flowers Dispensary in Ashburnham, MA.",
+                },
+                {
+                  "@type": "WebSite",
+                  "@id": `${SITE_URL}/#site`,
+                  url: SITE_URL,
+                  name: "Eddie's Flowers Dispensary",
+                  publisher: { "@id": `${SITE_URL}/#org` },
+                  inLanguage: "en-US",
+                },
+              ],
             }),
           }}
         />

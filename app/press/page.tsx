@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { Footer } from "@/components/Footer";
 import { LeadForm } from "@/components/LeadForm";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://eddiesflower.com";
+
 export const metadata: Metadata = {
+  alternates: { canonical: `${SITE_URL}/press` },
   title: "Press",
   description:
     "Press, media, and partnership inquiries for Eddie's Flowers Dispensary, opening soon in Ashburnham, MA.",

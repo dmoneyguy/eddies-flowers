@@ -64,6 +64,7 @@ export function Footer() {
         </div>
 
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-white/10 pt-6">
+          <Link className="hover:text-leaf-green" href="/faq">FAQ</Link>
           <Link className="hover:text-leaf-green" href="/privacy">Privacy</Link>
           <Link className="hover:text-leaf-green" href="/terms">Terms</Link>
           <Link className="hover:text-leaf-green" href="/accessibility">Accessibility</Link>

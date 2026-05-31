@@ -6,7 +6,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { eddiesFlowersLeads } from "@/lib/db/schema";
 import { checkRateLimit } from "@/lib/rate-limit";
-import { resend, FROM, NOTIFICATION_EMAIL } from "@/lib/email/resend";
+import { resend, FROM, NOTIFICATION_RECIPIENTS } from "@/lib/email/resend";
 
 export const runtime = "nodejs";
 
@@ -21,6 +21,7 @@ const schema = z
     org: z.string().max(200).optional().nullable().transform((v) => v?.trim() || ""),
     message: z.string().max(2000).optional().nullable().transform((v) => v?.trim() || ""),
     website: z.string().max(0).optional().nullable(),
+    extras: z.record(z.string(), z.unknown()).optional().nullable(),
   })
   .refine(
     (d) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email),
@@ -58,7 +59,7 @@ export async function POST(req: NextRequest) {
       { status: 400 },
     );
   }
-  const { source, name, email, phone, org, message } = parsed.data;
+  const { source, name, email, phone, org, message, extras } = parsed.data;
   const phoneNormalized = phone ? normalizePhone(phone) : "";
 
   const ip = extractIp(req);
@@ -83,7 +84,11 @@ export async function POST(req: NextRequest) {
       ipAddress: ip === "unknown" ? null : ip,
       userAgent,
       status: "new",
-      metadata: { org: org || null, path: req.headers.get("referer") || null },
+      metadata: {
+        org: org || null,
+        path: req.headers.get("referer") || null,
+        ...(extras && typeof extras === "object" ? extras : {}),
+      },
     });
   } catch (err) {
     // eslint-disable-next-line no-console
@@ -114,7 +119,7 @@ export async function POST(req: NextRequest) {
     }),
     resend.emails.send({
       from: FROM,
-      to: NOTIFICATION_EMAIL,
+      to: NOTIFICATION_RECIPIENTS,
       subject: `[${SOURCE_LABELS[source]}] ${name} <${email}>`,
       text: [
         `New ${SOURCE_LABELS[source].toLowerCase()} from the Eddie's Flowers site.`,
@@ -130,6 +135,10 @@ export async function POST(req: NextRequest) {
         ``,
         `Message:`,
         `${message || "(no message)"}`,
+        ``,
+        ...(extras && typeof extras === "object"
+          ? [`Extras:`, JSON.stringify(extras, null, 2)]
+          : []),
       ].join("\n"),
     }),
   ];

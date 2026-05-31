@@ -16,7 +16,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { eddiesFlowersLeads } from "@/lib/db/schema";
 import { checkRateLimit } from "@/lib/rate-limit";
-import { resend, FROM, NOTIFICATION_EMAIL } from "@/lib/email/resend";
+import { resend, FROM, NOTIFICATION_RECIPIENTS } from "@/lib/email/resend";
 
 export const runtime = "nodejs";
 
@@ -154,7 +154,7 @@ export async function POST(req: NextRequest) {
   sendOps.push(
     resend.emails.send({
       from: FROM,
-      to: NOTIFICATION_EMAIL,
+      to: NOTIFICATION_RECIPIENTS,
       subject: `New waitlist signup: ${emailNormalized || phoneNormalized || "(unknown)"}`,
       text: [
         `New launch waitlist signup for Eddie's Flowers.`,
