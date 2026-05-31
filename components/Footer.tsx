@@ -1,7 +1,18 @@
 // Footer — visible on every page. License + MA compliance disclosure + Legacy
-// attribution + navigation to careers / press / wholesale / legal.
+// attribution + nav to careers / press / wholesale / legal + contact strip.
 
 import Link from "next/link";
+import {
+  STREET_ADDRESS,
+  ADDRESS_LOCALITY,
+  ADDRESS_REGION,
+  POSTAL_CODE,
+  PHONE_DISPLAY,
+  PHONE_TEL_HREF,
+  CONTACT_EMAIL,
+  CONTACT_EMAIL_HREF,
+  HOURS_DISPLAY,
+} from "@/lib/contact";
 
 const LICENSE_NUMBER = process.env.NEXT_PUBLIC_LICENSE_NUMBER || "MRN284579";
 
@@ -9,7 +20,6 @@ export function Footer() {
   return (
     <footer className="bg-charcoal-black px-6 py-12 text-white/80">
       <div className="mx-auto max-w-4xl space-y-8 text-sm leading-relaxed">
-        {/* Primary nav — work with us / talk to us */}
         <div className="grid gap-6 sm:grid-cols-3">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-white/40">
@@ -20,15 +30,8 @@ export function Footer() {
                 <Link className="hover:text-leaf-green" href="/careers">Careers</Link>
               </li>
               <li>
-                <Link className="hover:text-leaf-green" href="/wholesale">Brands & wholesale</Link>
+                <Link className="hover:text-leaf-green" href="/wholesale">Brands &amp; wholesale</Link>
               </li>
-            </ul>
-          </div>
-          <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-white/40">
-              Media
-            </p>
-            <ul className="mt-2 space-y-1">
               <li>
                 <Link className="hover:text-leaf-green" href="/press">Press inquiries</Link>
               </li>
@@ -36,14 +39,29 @@ export function Footer() {
           </div>
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-white/40">
+              Contact
+            </p>
+            <ul className="mt-2 space-y-1">
+              <li>
+                <a className="hover:text-leaf-green" href={PHONE_TEL_HREF}>{PHONE_DISPLAY}</a>
+              </li>
+              <li>
+                <a className="break-all hover:text-leaf-green" href={CONTACT_EMAIL_HREF}>{CONTACT_EMAIL}</a>
+              </li>
+              <li className="text-white/55">{HOURS_DISPLAY}</li>
+            </ul>
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-white/40">
               Visit
             </p>
-            <p className="mt-2 text-white/70">23 Rindge State Road</p>
-            <p className="text-white/70">Ashburnham, MA 01430</p>
+            <p className="mt-2 text-white/70">{STREET_ADDRESS}</p>
+            <p className="text-white/70">
+              {ADDRESS_LOCALITY}, {ADDRESS_REGION} {POSTAL_CODE}
+            </p>
           </div>
         </div>
 
-        {/* License + compliance — required boilerplate */}
         <div className="space-y-4 border-t border-white/10 pt-8">
           <p className="font-semibold text-white">
             Eddie&apos;s Flowers — Massachusetts Licensed Adult-Use Marijuana Retailer #

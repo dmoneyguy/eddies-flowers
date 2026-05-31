@@ -11,7 +11,15 @@ const FAQ = [
   },
   {
     q: "Where is Eddie's Flowers located?",
-    a: "23 Rindge State Road, Ashburnham, MA 01430. We're a neighborhood dispensary serving Ashburnham, Winchendon, Gardner, Fitchburg, and the surrounding North Worcester County towns.",
+    a: "23 Rindge State Road, Ashburnham, MA 01430. We're a neighborhood dispensary serving Ashburnham, Winchendon, Gardner, Fitchburg, and the surrounding North Worcester County towns. Phone: (978) 883-4026.",
+  },
+  {
+    q: "What are Eddie's Flowers hours?",
+    a: "Our planned operating hours are 8:30 AM to 10:00 PM, daily. Hours will be confirmed when we open.",
+  },
+  {
+    q: "How do I contact Eddie's Flowers?",
+    a: "Phone (978) 883-4026, email info@eddiesflowers.com, or visit https://eddiesflower.com. For careers, /careers; for press, /press; for wholesale, /wholesale.",
   },
   {
     q: "Are you hiring?",

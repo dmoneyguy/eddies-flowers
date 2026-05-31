@@ -2,6 +2,11 @@ import type { Metadata, Viewport } from "next";
 import { Poppins, Fraunces, Caveat } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { AgeGateProvider } from "@/components/AgeGateProvider";
+import {
+  PHONE_E164,
+  CONTACT_EMAIL,
+  OPENING_HOURS_SPEC,
+} from "@/lib/contact";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -115,7 +120,9 @@ export default function RootLayout({
                   url: SITE_URL,
                   logo: `${SITE_URL}/icon-512.png`,
                   image: `${SITE_URL}/og.png`,
-                  telephone: "",
+                  telephone: PHONE_E164,
+                  email: CONTACT_EMAIL,
+                  openingHoursSpecification: OPENING_HOURS_SPEC,
                   address: {
                     "@type": "PostalAddress",
                     streetAddress: "23 Rindge State Road",
