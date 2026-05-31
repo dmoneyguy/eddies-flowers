@@ -17,9 +17,9 @@ export const PHONE_DISPLAY = "(978) 883-4026";
 export const PHONE_E164 = "+19788834026";
 export const PHONE_TEL_HREF = `tel:${PHONE_E164}`;
 
-// Note: contact email uses the "eddiesflowers.com" domain (plural). Our send
-// domain is "eddiesflower.com" (singular) — different addresses, both valid.
-export const CONTACT_EMAIL = "info@eddiesflowers.com";
+// Contact email + send domain both use eddiesflower.com (singular) — single
+// source of truth, matches the website domain.
+export const CONTACT_EMAIL = "info@eddiesflower.com";
 export const CONTACT_EMAIL_HREF = `mailto:${CONTACT_EMAIL}`;
 
 export const WEBSITE_URL = "https://eddiesflower.com";

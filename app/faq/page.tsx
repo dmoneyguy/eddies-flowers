@@ -19,7 +19,7 @@ const FAQ = [
   },
   {
     q: "How do I contact Eddie's Flowers?",
-    a: "Phone (978) 883-4026, email info@eddiesflowers.com, or visit https://eddiesflower.com. For careers, /careers; for press, /press; for wholesale, /wholesale.",
+    a: "Phone (978) 883-4026, email info@eddiesflower.com, or visit https://eddiesflower.com. For careers, /careers; for press, /press; for wholesale, /wholesale.",
   },
   {
     q: "Are you hiring?",
