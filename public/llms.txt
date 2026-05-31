@@ -40,6 +40,10 @@ Massachusetts cultivators, edibles, concentrates, vapes, and pre-rolls.
 
 - [Home](https://eddiesflower.com/): Brand overview, waitlist signup,
   location, values
+- [Ashburnham](https://eddiesflower.com/ashburnham): Town-specific landing
+  page. Eddie's is the only dispensary in Ashburnham town limits; this page
+  covers address, hours, local context, and frequently-asked Ashburnham
+  questions.
 - [Careers](https://eddiesflower.com/careers): We're hiring local staff in
   Ashburnham and North Worcester County. Roles: budtender, keyholder,
   cannabis tech, compliance, delivery, security
