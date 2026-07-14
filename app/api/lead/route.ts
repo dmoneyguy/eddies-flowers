@@ -143,6 +143,36 @@ export async function POST(req: NextRequest) {
     }),
   ];
 
+  // Careers inquiries also flow into Legacy OS: this creates the applicant's
+  // Academy account and emails them their training/quiz invite automatically.
+  // Server-to-server (no CORS), best-effort — a failure here never blocks the
+  // submission or the notification emails above.
+  if (source === "careers") {
+    const rolesInterested = Array.isArray((extras as Record<string, unknown>)?.roles_interested)
+      ? ((extras as Record<string, unknown>).roles_interested as string[])
+      : [];
+    const roleSlug = (rolesInterested[0] || "general").replace(/_/g, "-");
+    const experience = typeof (extras as Record<string, unknown>)?.experience === "string"
+      ? ((extras as Record<string, unknown>).experience as string)
+      : undefined;
+    sendOps.push(
+      fetch("https://legacy-os.thelegacyops.com/api/v1/careers/public-apply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          full_name: name,
+          email,
+          phone: phoneNormalized || undefined,
+          role_slug: roleSlug,
+          location: "MA",
+          relevant_experience: experience,
+          motivation: message || undefined,
+          referral_source: "eddiesflower.com careers form",
+        }),
+      }),
+    );
+  }
+
   await Promise.allSettled(sendOps).then((results) => {
     for (const r of results) {
       if (r.status === "rejected") {
