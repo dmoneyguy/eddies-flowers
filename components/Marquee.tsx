@@ -1,6 +1,8 @@
 // Marquee — brand band scrolling between hero and the values section.
 // Server-rendered, pure CSS animation. Doubles its content inline so the loop
-// is seamless. Discount-language-free per MA CCC compliance posture.
+// is seamless. Discount-language-free: 935 CMR 500.105(4)(b)20 prohibits
+// advertising discounts, coupons or loyalty programmes, and (4)(b)18 prohibits
+// advertising price or price comparison. Keep every item here descriptive.
 
 interface MarqueeProps {
   items?: string[];

@@ -2,10 +2,31 @@
 
 // Age gate splash — Massachusetts CCC compliance.
 //
-// MA framework (post-April 2026): cannabis content (including discount /
-// loyalty messaging) on a dispensary website is permitted, but the audience
-// must be reasonably expected to be 21+. The site-side enforcement is an
-// affirmative attestation gate before the user reaches the cannabis content.
+// Why this exists: 935 CMR 500.105(4)(b)13 requires age verification before a
+// user reaches cannabis content, and (4)(b)2 requires any placement to have a
+// reasonably expected 21+ audience. This gate satisfies both.
+//
+// WHAT THIS GATE DOES *NOT* DO — read before adding copy behind it.
+// Passing the gate does not unlock otherwise-prohibited content. 500.105(4)(a)
+// is the PERMITTED list; (4)(b) is the PROHIBITED list; and (4)(a)7 permits
+// advertising only where it is "not otherwise prohibited in ... (4)(b)". The
+// CCC's Bulletin on Advertising Activities (21 May 2024) is explicit:
+// "Minimal interaction by the Consumer, such as verifying that they are over
+// 21 years old via a website's age gate ... does not make the communication
+// personalized."
+//
+// So the following stay OFF this site regardless of the gate:
+//   - discounts, coupons, loyalty/rewards/points/referral programmes — (4)(b)20
+//   - "sale", "deal", "xx% off", BOGO, strike-through pricing
+//   - price comparison against other retailers — (4)(b)18
+// A plain priced product/strain catalogue IS permitted, and is in fact
+// required — 500.105(4)(a)6 ("shall provide a catalogue ... and may post the
+// same ... on its website").
+//
+// Ch. 65 of the Acts of 2026, s.21 lets the Commission permit discount and
+// loyalty advertising IN-STORE or via an OPT-IN EMAIL LIST. It is permissive,
+// the Commission has not acted on it, and it never covers the public website.
+// Do not relax any of the above on the strength of it.
 //
 // Flow:
 //   1. On first visit, full-screen splash blocks the page. No cannabis copy
