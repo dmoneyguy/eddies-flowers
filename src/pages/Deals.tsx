@@ -1,3 +1,27 @@
+/*
+ * UNROUTED — DO NOT RE-ENABLE WITHOUT A COMPLIANCE REVIEW.
+ *
+ * This page was removed from the public site on 2026-08-04. It is retained
+ * because the design work is good and the rules may change, not because it is
+ * safe to publish today.
+ *
+ * Why it came down — 935 CMR 500.105(4)(a)20 prohibits advertising through
+ * "gifts, giveaways, discounts, points-based reward systems, customer loyalty
+ * programs, coupons, and 'free' or 'donated' Marijuana." 500.105(4)(a)18
+ * separately prohibits "Advertising of the price of Marijuana or Marijuana
+ * Products." This page carried all of those: a 15% first-time discount, six
+ * weekly discounts, a points programme ($1 = 1 point, 100 points = $5 off,
+ * birthday 2x, referral bonus), and advertised prices ("2 for $25").
+ *
+ * The ONLY discount exception in the regulation is 500.105(4)(a)9 — EMPLOYEE
+ * discounts, as part of a diversion-prevention policy. There is no compliant
+ * form of a customer loyalty programme in Massachusetts as the rule stands.
+ *
+ * Condition for revisiting: the Ch. 65 emergency regulations lapse around
+ * 2026-09-17. Re-read 500.105(4)(a)18 and (a)20 in whatever text replaces them
+ * before restoring this route. If the prohibition survives, this page stays off.
+ */
+
 import { Link } from 'react-router-dom';
 import { useInView } from '../hooks/useInView';
 import RevealText from '../components/RevealText';

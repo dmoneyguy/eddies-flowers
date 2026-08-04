@@ -6,7 +6,6 @@ const LINKS = [
   { to: '/', label: 'Home', exact: true },
   { to: '/menu', label: 'Menu' },
   { to: '/about', label: 'About' },
-  { to: '/deals', label: 'Deals' },
   { to: '/contact', label: 'Contact' },
 ];
 
@@ -50,6 +49,13 @@ export default function Nav() {
               {label}
             </NavLink>
           ))}
+          <a
+            href="https://legacy-os.thelegacyops.com/login"
+            className="nav__link nav__link--login"
+            onClick={() => setOpen(false)}
+          >
+            Team Login
+          </a>
           <Link to="/menu" className="btn btn--primary nav__cta" onClick={() => setOpen(false)}>
             Order Now
           </Link>

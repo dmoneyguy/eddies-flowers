@@ -9,7 +9,6 @@ import CustomCursor from './components/CustomCursor';
 import Home from './pages/Home';
 import Menu from './pages/Menu';
 import About from './pages/About';
-import Deals from './pages/Deals';
 import Contact from './pages/Contact';
 import './App.css';
 
@@ -47,7 +46,6 @@ function AppLayout() {
           <Route path="/" element={<Home />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/about" element={<About />} />
-          <Route path="/deals" element={<Deals />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="*" element={<Home />} />
         </Routes>
