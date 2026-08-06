@@ -7,9 +7,10 @@ import { ReviewFeedbackForm } from "@/components/ReviewFeedbackForm";
  * business card. The card is ink on paper and cannot be changed once printed,
  * so the QR points here and this page decides where people go.
  *
- * TO GO LIVE: set REVIEW_URL in the Vercel project to the Google review short
- * link (https://g.page/r/.../review) and redeploy. Until it is set, the public
- * option renders as "opens when we do" rather than a dead link.
+ * The public button points at the Google review short link below. Reviews
+ * cannot actually be POSTED on Google until the business is officially open,
+ * so before opening day this button will reach Google and Google will decide
+ * what to show. Set a REVIEW_URL environment variable in Vercel to override.
  *
  * THIS PAGE IS DELIBERATELY NOT A REVIEW GATE. It does not ask how the visit
  * went and then route people. Every visitor sees both the public review link
@@ -21,7 +22,12 @@ import { ReviewFeedbackForm } from "@/components/ReviewFeedbackForm";
  */
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://eddiesflower.com";
-const REVIEW_URL = process.env.REVIEW_URL?.trim();
+// Google review short link for Eddie's Flowers, taken from the Business
+// Profile's own "Get more reviews" panel on 2026-08-06. Verified: it resolves
+// to the Ashburnham listing and opens the review flow.
+// Override with a REVIEW_URL environment variable in Vercel if it ever changes.
+const GOOGLE_REVIEW_LINK = "https://g.page/r/CaJNHKUkYbpVEBM/review";
+const REVIEW_URL = process.env.REVIEW_URL?.trim() || GOOGLE_REVIEW_LINK;
 
 export const metadata: Metadata = {
   title: "How was your visit?",
