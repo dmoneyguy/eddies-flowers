@@ -21,7 +21,7 @@ import { ReviewFeedbackForm } from "@/components/ReviewFeedbackForm";
  * options on sentiment.
  */
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://eddiesflower.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.eddiesflower.com";
 // Google review short link for Eddie's Flowers, taken from the Business
 // Profile's own "Get more reviews" panel on 2026-08-06. Verified: it resolves
 // to the Ashburnham listing and opens the review flow.

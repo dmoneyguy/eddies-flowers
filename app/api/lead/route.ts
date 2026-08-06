@@ -114,7 +114,7 @@ export async function POST(req: NextRequest) {
         ``,
         `Eddie's Flowers Dispensary`,
         `MA Licensed Adult-Use Marijuana Retailer #MRN284579 (Provisional)`,
-        `https://eddiesflower.com`,
+        `https://www.eddiesflower.com`,
       ].join("\n"),
     }),
     resend.emails.send({

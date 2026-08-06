@@ -33,7 +33,7 @@ const caveat = Caveat({
   display: "swap",
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://eddiesflower.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.eddiesflower.com";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

@@ -24,7 +24,7 @@ import {
   HOURS_DAYS_DISPLAY,
 } from "@/lib/contact";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://eddiesflower.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.eddiesflower.com";
 const PAGE_URL = `${SITE_URL}/westminster`;
 
 export const metadata: Metadata = {

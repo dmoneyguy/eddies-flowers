@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Footer } from "@/components/Footer";
 import { LeadForm } from "@/components/LeadForm";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://eddiesflower.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.eddiesflower.com";
 
 export const metadata: Metadata = {
   alternates: { canonical: `${SITE_URL}/press` },
@@ -35,7 +35,7 @@ export default function Press() {
                 <li>Location: 23 Rindge State Road, Ashburnham, MA 01430</li>
                 <li>Phone: (978) 883-4026</li>
                 <li>Email: info@eddiesflower.com</li>
-                <li>Website: https://eddiesflower.com</li>
+                <li>Website: https://www.eddiesflower.com</li>
                 <li>Planned hours: 8:30 AM – 10:00 PM daily</li>
                 <li>Opening: soon</li>
                 <li>Operator: Legacy Operations</li>
