@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Poppins, Fraunces, Caveat } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { SiteHeader } from "@/components/SiteHeader";
 import { AgeGateProvider } from "@/components/AgeGateProvider";
 import {
   PHONE_E164,
@@ -176,10 +177,17 @@ export default function RootLayout({
         />
       </head>
       <body>
+        {/* Without this, [data-reveal] { opacity: 0 } in globals.css leaves
+            everything below the hero invisible whenever JavaScript fails to
+            load. The HTML is all there; only the CSS is hiding it. */}
+        <noscript>
+          <style>{`[data-reveal]{opacity:1 !important;transform:none !important}`}</style>
+        </noscript>
         <a href="#main" className="skip-link">
           Skip to main content
         </a>
         <AgeGateProvider />
+        <SiteHeader />
         {children}
         <Analytics />
       </body>

@@ -52,6 +52,9 @@ body {
   text-decoration: none;
 }
 .skip-link:focus { top: 0; }
+/* The header is fixed at z-50; the skip link has to clear it or it opens
+   behind the nav and a keyboard user never sees it. */
+.skip-link { z-index: 60; min-height: 44px; display: inline-flex; align-items: center; }
 
 /* Focus ring */
 :focus-visible {
@@ -329,12 +332,10 @@ body {
   box-shadow: 0 18px 40px -20px rgba(115,190,68,0.30);
 }
 
-/* Sticky marquee modifier */
-.marquee-sticky {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  transition: transform 320ms cubic-bezier(0.2,0.7,0.2,1), opacity 320ms;
+/* Anchor targets clear the fixed header rather than landing under it. */
+:target,
+section[id] {
+  scroll-margin-top: 5rem;
 }
 
 /* Reduced motion: kill the new animations too */

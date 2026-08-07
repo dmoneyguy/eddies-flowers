@@ -168,7 +168,7 @@ export default function RindgeNhPage() {
                   <dd className="mt-1">
                     <a
                       href={PHONE_TEL_HREF}
-                      className="text-sm font-medium text-white hover:text-leaf-green-soft"
+                      className="inline-flex min-h-11 items-center text-sm font-medium text-white hover:text-leaf-green-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green"
                     >
                       {PHONE_DISPLAY}
                     </a>
@@ -181,7 +181,7 @@ export default function RindgeNhPage() {
                   <dd className="mt-1">
                     <a
                       href={CONTACT_EMAIL_HREF}
-                      className="break-all text-sm font-medium text-white hover:text-leaf-green-soft"
+                      className="inline-flex min-h-11 items-center break-all text-sm font-medium text-white hover:text-leaf-green-soft focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green"
                     >
                       {CONTACT_EMAIL}
                     </a>

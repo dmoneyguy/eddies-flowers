@@ -189,10 +189,11 @@ export function CareersForm() {
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold text-charcoal-black">
+        <label htmlFor="cf-name" className="mb-2 block text-sm font-semibold text-charcoal-black">
           Your name
         </label>
         <input
+          id="cf-name"
           type="text"
           name="name"
           required
@@ -204,10 +205,11 @@ export function CareersForm() {
 
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label className="mb-2 block text-sm font-semibold text-charcoal-black">
+          <label htmlFor="cf-email" className="mb-2 block text-sm font-semibold text-charcoal-black">
             Email
           </label>
           <input
+            id="cf-email"
             type="email"
             name="email"
             required
@@ -217,10 +219,11 @@ export function CareersForm() {
           />
         </div>
         <div>
-          <label className="mb-2 block text-sm font-semibold text-charcoal-black">
+          <label htmlFor="cf-phone" className="mb-2 block text-sm font-semibold text-charcoal-black">
             Phone <span className="font-normal text-charcoal-black/50">(optional)</span>
           </label>
           <input
+            id="cf-phone"
             type="tel"
             name="phone"
             autoComplete="tel"
@@ -265,10 +268,11 @@ export function CareersForm() {
 
       <div className="grid gap-5 sm:grid-cols-2">
         <div>
-          <label className="mb-2 block text-sm font-semibold text-charcoal-black">
+          <label htmlFor="cf-availability" className="mb-2 block text-sm font-semibold text-charcoal-black">
             Availability
           </label>
           <select
+            id="cf-availability"
             name="availability"
             required
             className="w-full rounded-lg border-2 border-charcoal-black/15 bg-white px-4 py-3 text-base text-charcoal-black focus:border-leaf-green focus:outline-none"
@@ -281,10 +285,11 @@ export function CareersForm() {
           </select>
         </div>
         <div>
-          <label className="mb-2 block text-sm font-semibold text-charcoal-black">
+          <label htmlFor="cf-experience" className="mb-2 block text-sm font-semibold text-charcoal-black">
             Experience
           </label>
           <select
+            id="cf-experience"
             name="experience"
             required
             className="w-full rounded-lg border-2 border-charcoal-black/15 bg-white px-4 py-3 text-base text-charcoal-black focus:border-leaf-green focus:outline-none"
@@ -332,11 +337,12 @@ export function CareersForm() {
       </div>
 
       <div>
-        <label className="mb-2 block text-sm font-semibold text-charcoal-black">
+        <label htmlFor="cf-message" className="mb-2 block text-sm font-semibold text-charcoal-black">
           Why Eddie&apos;s Flowers?{" "}
           <span className="font-normal text-charcoal-black/50">(short, no pressure)</span>
         </label>
         <textarea
+          id="cf-message"
           name="message"
           rows={4}
           maxLength={2000}

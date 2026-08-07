@@ -17,7 +17,7 @@ export function Hero() {
   return (
     <section
       id="hero-canvas"
-      className="mesh-canvas spotlight relative isolate overflow-hidden px-6 pt-20 pb-24 sm:pt-28 sm:pb-32"
+      className="mesh-canvas spotlight relative isolate overflow-hidden px-6 pt-28 pb-24 sm:pt-36 sm:pb-32"
     >
       {/* Ambient drifting leaves */}
       {LEAVES.map((leaf, i) => (

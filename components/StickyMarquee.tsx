@@ -1,35 +1,13 @@
-"use client";
+// StickyMarquee — kept as a named export for the pages that import it, but it
+// is no longer sticky.
+//
+// It used to pin itself to the top of the viewport, spending 54px of an 844px
+// phone screen permanently to repeat the address. SiteHeader now owns that
+// slot and spends it on navigation instead. The marquee runs once, in flow,
+// where it reads as a brand band rather than a fixed toolbar.
 
-// StickyMarquee — wraps the Marquee in a sticky position when the user
-// has scrolled past the hero. Otherwise stays in normal flow.
-
-import { useEffect, useState } from "react";
 import { Marquee } from "./Marquee";
 
 export function StickyMarquee() {
-  const [sticky, setSticky] = useState(false);
-
-  useEffect(() => {
-    const sentinel = document.getElementById("marquee-sentinel");
-    if (!sentinel) return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        // When the sentinel scrolls OFF the top of the viewport, become sticky.
-        if (entry && entry.boundingClientRect.top < 0) setSticky(true);
-        else setSticky(false);
-      },
-      { threshold: 0 },
-    );
-    io.observe(sentinel);
-    return () => io.disconnect();
-  }, []);
-
-  return (
-    <>
-      <div id="marquee-sentinel" aria-hidden="true" />
-      <div className={sticky ? "marquee-sticky" : ""}>
-        <Marquee />
-      </div>
-    </>
-  );
+  return <Marquee />;
 }
