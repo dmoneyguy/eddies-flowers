@@ -1,6 +1,12 @@
 // Waitlist section — cream backdrop, ray-burst halo. Founding-member framing
-// instead of explicit discount language. Compliant with MA CCC posture
-// (no advertised price/discount promise on the public website).
+// instead of explicit discount language. "Founding member" must stay a
+// membership/notification framing and must never imply a discount, reward or
+// points benefit — 935 CMR 500.105(4)(b)20 prohibits advertising loyalty
+// programmes, and the CCC's 21 May 2024 advertising bulletin confirms the age
+// gate does not create an exception. This form doubles as the opt-in email
+// list contemplated by Ch. 65 of the Acts of 2026, s.21; that section is
+// permissive only and the Commission has not acted on it, so no offer copy
+// goes in here or in the emails until it does.
 
 import { WaitlistForm } from "./WaitlistForm";
 

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Footer } from "@/components/Footer";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://eddiesflower.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.eddiesflower.com";
 
 const FAQ = [
   {
@@ -23,7 +23,7 @@ const FAQ = [
   },
   {
     q: "How do I contact Eddie's Flowers?",
-    a: "Phone (978) 883-4026, email info@eddiesflower.com, or visit https://eddiesflower.com. For careers, /careers; for press, /press; for wholesale, /wholesale.",
+    a: "Phone (978) 883-4026, email info@eddiesflower.com, or visit https://www.eddiesflower.com. For careers, /careers; for press, /press; for wholesale, /wholesale.",
   },
   {
     q: "Are you hiring?",

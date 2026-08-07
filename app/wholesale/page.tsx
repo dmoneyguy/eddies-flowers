@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Footer } from "@/components/Footer";
 import { LeadForm } from "@/components/LeadForm";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://eddiesflower.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.eddiesflower.com";
 
 export const metadata: Metadata = {
   alternates: { canonical: `${SITE_URL}/wholesale` },
