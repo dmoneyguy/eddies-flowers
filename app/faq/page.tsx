@@ -19,7 +19,7 @@ const FAQ = [
   },
   {
     q: "What are Eddie's Flowers hours?",
-    a: "Our planned operating hours are 8:30 AM to 10:00 PM, daily. Hours will be confirmed when we open.",
+    a: "Our planned operating hours are Monday to Friday 10:00 AM to 9:00 PM, Saturday 9:00 AM to 8:00 PM, and Sunday 9:00 AM to 7:00 PM. Hours will be confirmed when we open.",
   },
   {
     q: "How do I contact Eddie's Flowers?",

@@ -50,7 +50,7 @@ const PAGE_FAQ = [
   },
   {
     "q": "When does Eddie's open?",
-    "a": "We're still in buildout and don't have a confirmed opening date yet. Join the waitlist on our home page and we'll send you a note the day the doors open."
+    "a": "We're still in buildout and don't have a confirmed opening date yet. Ask for a Grand Opening invitation on our home page and we'll send you the date and time before we announce it anywhere else."
   },
   {
     "q": "Are you local, or part of a chain?",

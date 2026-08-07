@@ -25,13 +25,30 @@ const schema = z.object({
   name: z.string().max(120).optional().nullable(),
   phone: z.string().max(40).optional().nullable(),
   website: z.string().max(0).optional().nullable(), // honeypot — must be empty
-  marketing_opt_in: z.boolean().optional(), // email marketing/loyalty; defaults ON when an email is given
+  marketing_opt_in: z.boolean().optional(), // email marketing; defaults ON when an email is given
   sms_opt_in: z.boolean().optional(), // marketing texts; explicit opt-in, defaults OFF
 });
 
+// The wording shown beside the opt-in box, recorded verbatim against every
+// row so we can prove what a person agreed to. Never edit this string without
+// bumping CONSENT_VERSION — old rows must keep pointing at the old wording.
+//
+// v3 removed "deals" and "loyalty perks". A licensed marijuana retailer may
+// not advertise discounts, coupons, points-based reward systems or customer
+// loyalty programmes — 935 CMR 500.105(4)(b)20 — and a consent box promising
+// those on eddiesflower.com is advertising them. Do not put them back.
 const CONSENT_TEXT =
-  "Keep me in the loop — email me news, deals, events, and loyalty perks from Eddie's Flowers and the Legacy Operations family of brands that powers this site. I can unsubscribe anytime.";
-const CONSENT_VERSION = "ef-product-request-v2";
+  "Keep me in the loop — email me news, events, and updates from Eddie's Flowers and the Legacy Operations family of brands that powers this site. I can unsubscribe anytime.";
+const SMS_CONSENT_TEXT =
+  "Text me too — occasional texts from Eddie's Flowers and Legacy Operations about new arrivals and events. Msg & data rates may apply. Reply STOP to opt out.";
+const CONSENT_VERSION = "ef-product-request-v3";
+
+// Overridable so preview/test runs can point at a sink instead of the live
+// CRM. Defaults to production — an unset env var must never silently stop
+// real submissions reaching Legacy OS.
+const CRM_CONTACTS_URL =
+  process.env.LEGACY_OS_CRM_URL ||
+  "https://legacy-os.thelegacyops.com/api/v1/contacts";
 
 function extractIp(req: NextRequest): string {
   const xff = req.headers.get("x-forwarded-for");
@@ -94,6 +111,16 @@ export async function POST(req: NextRequest) {
         brand: brand?.trim() || null,
         category: category?.trim() || null,
         path: req.headers.get("referer") || null,
+        // Consent recorded on the row itself, not only forwarded to the CRM.
+        // The leads table is the record we can produce if anyone ever asks
+        // what this person agreed to.
+        marketing_opt_in: marketingOptIn,
+        sms_opt_in: parsed.data.sms_opt_in === true,
+        consent_text: CONSENT_TEXT,
+        sms_consent_text:
+          parsed.data.sms_opt_in === true ? SMS_CONSENT_TEXT : null,
+        consent_version: CONSENT_VERSION,
+        consent_captured_at: new Date().toISOString(),
       },
     });
   } catch (err) {
@@ -126,7 +153,7 @@ export async function POST(req: NextRequest) {
   if (email) {
     // Capture the contact + consent into the Legacy OS CRM (best-effort).
     sends.push(
-      fetch("https://legacy-os.thelegacyops.com/api/v1/contacts", {
+      fetch(CRM_CONTACTS_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -47,10 +47,11 @@ export function FounderNote() {
               href="#waitlist"
               className="font-medium text-leaf-green-deep underline decoration-leaf-green/40 underline-offset-4 hover:decoration-leaf-green-deep"
             >
-              Join the waitlist
+              Ask for a Grand Opening invitation
             </a>{" "}
-            and I&apos;ll send you a note the day we open so you&apos;re among the
-            first through the door. No spam, no list-selling — just one note from me.
+            and I&apos;ll send you the date and time before we announce it
+            anywhere else, so you&apos;re among the first through the door. No spam,
+            no list-selling — just a note from me.
           </p>
         </div>
 

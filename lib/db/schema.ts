@@ -56,6 +56,7 @@ export type LeadSource =
   | "careers"
   | "wholesale_inquiry"
   | "newsletter"
-  | "launch_waitlist";
+  | "launch_waitlist"
+  | "product_request";
 
 export type LeadStatus = "new" | "contacted" | "converted" | "unsubscribed" | "spam";

@@ -1,9 +1,25 @@
 "use client";
 
-// Email + phone capture form. SMS-first cannabis brands convert harder on
-// phone than email — both fields are offered but only one is required.
+// Grand Opening invitation list. Email + phone capture; SMS-first cannabis
+// brands convert harder on phone than email, so both are offered but only one
+// is required.
+//
+// CONSENT IS NOT IMPLIED HERE AND MUST NOT BE MADE SO. Two separate, provable
+// opt-ins are collected and sent to the server:
+//   marketing_opt_in — email. Defaults ON (opt-out model), which is lawful for
+//                      email under CAN-SPAM given a working unsubscribe.
+//   sms_opt_in       — texts. Defaults OFF and must be affirmatively ticked.
+//                      The TCPA requires prior express WRITTEN consent for
+//                      marketing texts, and a pre-checked box is not consent.
+// The exact wording shown next to each box is recorded server-side with a
+// version string, so we can prove later what a person actually agreed to.
+//
+// Nothing here may offer a discount, reward, coupon or points benefit —
+// 935 CMR 500.105(4)(b)20. "Invitation" and "founding member" are membership
+// and notification framing only.
+//
 // Honeypot for bots, optimistic submit, fires a Vercel Analytics event on
-// success so we can attribute waitlist conversions to traffic sources.
+// success so we can attribute signups to traffic sources.
 //
 // State machine: idle → submitting → success | error
 
@@ -29,6 +45,8 @@ export function WaitlistForm() {
     const name = String(fd.get("name") || "").trim();
     const phone = String(fd.get("phone") || "").trim();
     const website = String(fd.get("website") || ""); // honeypot
+    const marketingOptIn = fd.get("marketing_opt_in") === "on";
+    const smsOptIn = fd.get("sms_opt_in") === "on";
 
     if (!email && !phone) {
       setState({
@@ -39,6 +57,16 @@ export function WaitlistForm() {
     }
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       setState({ kind: "error", message: "Please enter a valid email address." });
+      return;
+    }
+    // A phone number with no text consent is a number we can't text. Say so
+    // rather than collecting it and quietly never using it.
+    if (phone && !email && !smsOptIn) {
+      setState({
+        kind: "error",
+        message:
+          "To reach you by text we need your permission — please tick the text box, or give us an email address instead.",
+      });
       return;
     }
     if (website) {
@@ -53,7 +81,14 @@ export function WaitlistForm() {
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, name, phone, website }),
+        body: JSON.stringify({
+          email,
+          name,
+          phone,
+          website,
+          marketing_opt_in: marketingOptIn,
+          sms_opt_in: smsOptIn,
+        }),
       });
 
       const data: { ok?: boolean; error?: string } = await res
@@ -61,12 +96,13 @@ export function WaitlistForm() {
         .catch(() => ({ ok: false, error: "Network error" }));
 
       if (res.ok && data.ok) {
-        // Fire analytics — lets us measure waitlist conversion vs. raw visits
+        // Fire analytics — lets us measure conversion vs. raw visits
         try {
           track("waitlist_signup", {
             has_email: Boolean(email),
             has_phone: Boolean(phone),
             has_name: Boolean(name),
+            sms_opt_in: smsOptIn,
           });
         } catch {
           // Analytics is best-effort, never block the success state.
@@ -96,10 +132,11 @@ export function WaitlistForm() {
         className="rounded-2xl border-2 border-leaf-green/30 bg-leaf-green/10 p-8 text-center"
       >
         <p className="text-2xl font-bold text-charcoal-black">
-          You&apos;re on the list.
+          Your invitation is reserved.
         </p>
         <p className="mt-3 text-base text-charcoal-black/80">
-          We&apos;ll reach out the day the doors open. You&apos;re a founding member.
+          We&apos;ll send you the date and time for our Grand Opening before we
+          announce it anywhere else. You&apos;re a founding member.
         </p>
         <p className="mt-4 text-xs text-charcoal-black/50">
           — Eddie
@@ -180,7 +217,7 @@ export function WaitlistForm() {
           htmlFor="phone"
           className="mb-2 block text-sm font-semibold text-charcoal-black"
         >
-          Phone <span className="font-normal text-charcoal-black/50">(optional, for opening-day text)</span>
+          Phone <span className="font-normal text-charcoal-black/50">(optional, for the opening-day text)</span>
         </label>
         <input
           type="tel"
@@ -194,12 +231,51 @@ export function WaitlistForm() {
         />
       </div>
 
+      {/* Consent. Email defaults on; SMS is affirmative-only. Do not
+          pre-check the SMS box — that is the whole point of it. */}
+      <label
+        htmlFor="wl-marketing"
+        className="flex items-start gap-3 rounded-lg bg-charcoal-black/[0.03] p-3 text-sm text-charcoal-black/80"
+      >
+        <input
+          type="checkbox"
+          id="wl-marketing"
+          name="marketing_opt_in"
+          defaultChecked
+          className="mt-0.5 h-5 w-5 shrink-0 accent-leaf-green"
+        />
+        <span>
+          Keep me in the loop — email me news, events, and updates from Eddie&apos;s
+          Flowers and the Legacy Operations family of brands that powers this site.
+          I can unsubscribe anytime.
+        </span>
+      </label>
+
+      <label
+        htmlFor="wl-sms"
+        className="flex items-start gap-3 rounded-lg bg-charcoal-black/[0.03] p-3 text-sm text-charcoal-black/80"
+      >
+        <input
+          type="checkbox"
+          id="wl-sms"
+          name="sms_opt_in"
+          className="mt-0.5 h-5 w-5 shrink-0 accent-leaf-green"
+        />
+        <span>
+          Text me too — occasional texts from Eddie&apos;s Flowers and Legacy
+          Operations about our opening, drops and events.{" "}
+          <span className="text-charcoal-black/50">
+            Msg &amp; data rates may apply. Reply STOP to opt out.
+          </span>
+        </span>
+      </label>
+
       <button
         type="submit"
         disabled={state.kind === "submitting"}
         className="w-full rounded-full bg-leaf-green px-6 py-4 text-base font-semibold text-white shadow-sm transition-colors hover:bg-leaf-green/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green disabled:cursor-not-allowed disabled:opacity-60 sm:text-lg"
       >
-        {state.kind === "submitting" ? "Adding you…" : "Save my spot on the list"}
+        {state.kind === "submitting" ? "Reserving your invitation…" : "Reserve my invitation"}
       </button>
 
       {state.kind === "error" && (
@@ -209,9 +285,8 @@ export function WaitlistForm() {
       )}
 
       <p id="waitlist-microcopy" className="text-xs text-charcoal-black/60">
-        By submitting you confirm you are 21+ and agree we can email or text you
-        about Eddie&apos;s Flowers opening. Msg & data rates may apply. Reply STOP
-        to opt out. Unsubscribe anytime. We will never sell or share your info.
+        By submitting you confirm you are 21 or older. We will never sell or
+        share your information.
       </p>
     </form>
   );

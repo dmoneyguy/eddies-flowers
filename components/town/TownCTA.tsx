@@ -44,7 +44,7 @@ export function TownCTA({ townAccent }: TownCTAProps) {
           href="/#waitlist"
           className="glow-leaf mt-10 inline-flex items-center gap-2 rounded-full bg-leaf-green px-8 py-4 text-base font-semibold text-white sm:text-lg"
         >
-          Join the waitlist
+          Get my Grand Opening invite
           <span aria-hidden="true">→</span>
         </Link>
       </div>

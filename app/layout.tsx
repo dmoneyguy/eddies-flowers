@@ -42,7 +42,7 @@ export const metadata: Metadata = {
     template: "%s | Eddie's Flowers",
   },
   description:
-    "The only dispensary in Ashburnham, MA. Eddie's Flowers opens soon at 23 Rindge State Road. Join the waitlist to be first through the doors.",
+    "The only dispensary in Ashburnham, MA. Eddie's Flowers opens soon at 23 Rindge State Road. Ask for a Grand Opening invitation and be first through the doors.",
   keywords: [
     "Eddie's Flowers",
     "Ashburnham cannabis dispensary",
@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Eddie's Flowers Dispensary — Coming Soon",
     description:
-      "Ashburnham's new spot for flower. Join the waitlist to be first through the doors.",
+      "Ashburnham's new spot for flower. Ask for a Grand Opening invitation and be first through the doors.",
     url: SITE_URL,
     siteName: "Eddie's Flowers",
     type: "website",

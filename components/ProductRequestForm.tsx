@@ -168,7 +168,7 @@ export function ProductRequestForm() {
       <label htmlFor="pr-marketing" className="flex items-start gap-3 rounded-lg bg-charcoal-black/[0.03] p-3 text-sm text-charcoal-black/80">
         <input type="checkbox" id="pr-marketing" name="marketing_opt_in" defaultChecked className="mt-0.5 h-5 w-5 shrink-0 accent-leaf-green" />
         <span>
-          Keep me in the loop — email me news, deals, events, and loyalty perks from Eddie&apos;s Flowers and the
+          Keep me in the loop — email me news, events, and updates from Eddie&apos;s Flowers and the
           Legacy Operations family of brands that powers this site. I can unsubscribe anytime.{" "}
           <span className="text-charcoal-black/50">(Only used if you left an email above.)</span>
         </span>
@@ -177,7 +177,7 @@ export function ProductRequestForm() {
       <label htmlFor="pr-sms" className="flex items-start gap-3 rounded-lg bg-charcoal-black/[0.03] p-3 text-sm text-charcoal-black/80">
         <input type="checkbox" id="pr-sms" name="sms_opt_in" className="mt-0.5 h-5 w-5 shrink-0 accent-leaf-green" />
         <span>
-          Text me too — occasional texts from Eddie&apos;s Flowers and Legacy Operations about drops, deals, and events.{" "}
+          Text me too — occasional texts from Eddie&apos;s Flowers and Legacy Operations about new arrivals and events.{" "}
           <span className="text-charcoal-black/50">Msg &amp; data rates may apply. Reply STOP to opt out.</span>
         </span>
       </label>

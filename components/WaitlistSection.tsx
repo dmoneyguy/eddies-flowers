@@ -1,5 +1,8 @@
-// Waitlist section — cream backdrop, ray-burst halo. Founding-member framing
-// instead of explicit discount language. "Founding member" must stay a
+// Grand Opening invitation section — cream backdrop, ray-burst halo.
+// Founding-member framing instead of explicit discount language. An
+// "invitation" here is an invitation to attend the opening and nothing more:
+// it must never be described as, or bundled with, a gift, discount, coupon,
+// reward or points benefit. "Founding member" must stay a
 // membership/notification framing and must never imply a discount, reward or
 // points benefit — 935 CMR 500.105(4)(b)20 prohibits advertising loyalty
 // programmes, and the CCC's 21 May 2024 advertising bulletin confirms the age
@@ -29,7 +32,7 @@ export function WaitlistSection() {
       <div data-reveal className="mx-auto max-w-xl text-center">
         <span className="ray-burst inline-block">
           <p className="text-xs font-semibold uppercase tracking-[0.32em] text-leaf-green-deep">
-            ✶ Founding Members ✶
+            ✶ Grand Opening ✶
           </p>
         </span>
 
@@ -37,9 +40,9 @@ export function WaitlistSection() {
           data-reveal
           className="display mt-5 text-balance text-4xl font-medium text-charcoal-black sm:text-5xl"
         >
-          Be there when the{" "}
+          You&apos;re invited to the{" "}
           <span className="italic font-light text-leaf-green-deep">
-            doors open
+            Grand Opening
           </span>.
         </h2>
 
@@ -47,7 +50,8 @@ export function WaitlistSection() {
           data-reveal
           className="mt-4 text-balance text-base text-charcoal-black/70"
         >
-          One note from us the day we open — no spam, no shares, no list-selling. Ever.
+          Leave your name and we&apos;ll send you the date and time before we
+          announce it anywhere else. No spam, no shares, no list-selling. Ever.
         </p>
       </div>
 

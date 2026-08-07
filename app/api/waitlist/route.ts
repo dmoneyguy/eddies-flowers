@@ -1,12 +1,26 @@
-// POST /api/waitlist — handles waitlist submissions from the Coming Soon page.
+// POST /api/waitlist — Grand Opening invitation list submissions.
 //
 // Flow:
 //   1. Validate payload (Zod): email and/or phone, optional name, honeypot empty
 //   2. Rate-limit per source IP (5/hour, in-memory)
 //   3. INSERT row into control_plane.eddies_flowers_leads (source='launch_waitlist')
-//   4. Fire acknowledgment email (only if email present + Resend configured)
-//   5. Fire internal notification email
-//   6. Return { ok: true }
+//   4. Forward the contact + consent to the Legacy OS CRM (best-effort)
+//   5. Fire acknowledgment email (only if email present + Resend configured)
+//   6. Fire internal notification email
+//   7. Return { ok: true }
+//
+// CONSENT. This route records what the person actually ticked. It does not
+// assume consent, because the TCPA requires prior express WRITTEN consent for
+// marketing texts and a record of it. We store:
+//   consentedToMarketing — the email opt-in (defaults ON, opt-out model)
+//   metadata.sms_opt_in  — the text opt-in (affirmative only, defaults OFF)
+//   metadata.consent_text / consent_version — the exact wording shown, so we
+//   can prove later what was agreed to. Never change CONSENT_TEXT without
+//   bumping CONSENT_VERSION; old rows must keep pointing at the old wording.
+//
+// A phone number with no SMS opt-in is stored but must never be texted for
+// marketing. Downstream systems key on metadata.sms_opt_in, not on the
+// presence of a phone number.
 //
 // Email send failures do NOT roll back the DB insert — the lead is captured
 // either way. Resend failures are logged but invisible to the user.
@@ -19,6 +33,12 @@ import { checkRateLimit } from "@/lib/rate-limit";
 import { resend, FROM, NOTIFICATION_RECIPIENTS } from "@/lib/email/resend";
 
 export const runtime = "nodejs";
+
+const CONSENT_TEXT =
+  "Keep me in the loop — email me news, events, and updates from Eddie's Flowers and the Legacy Operations family of brands that powers this site. I can unsubscribe anytime.";
+const SMS_CONSENT_TEXT =
+  "Text me too — occasional texts from Eddie's Flowers and Legacy Operations about our opening, drops and events. Msg & data rates may apply. Reply STOP to opt out.";
+const CONSENT_VERSION = "ef-waitlist-v2";
 
 const schema = z
   .object({
@@ -41,6 +61,8 @@ const schema = z
       .nullable()
       .transform((v) => v?.trim() || ""),
     website: z.string().max(0).optional().nullable(), // honeypot — must be empty
+    marketing_opt_in: z.boolean().optional(), // email; defaults ON
+    sms_opt_in: z.boolean().optional(), // texts; explicit opt-in only
   })
   .refine(
     (d) => d.email !== "" || d.phone !== "",
@@ -49,7 +71,48 @@ const schema = z
   .refine(
     (d) => d.email === "" || /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(d.email),
     "Please enter a valid email address.",
+  )
+  .refine(
+    // Phone-only signups must carry an SMS opt-in, or we have no lawful way
+    // to reach them at all and would be holding a number for nothing.
+    (d) => d.email !== "" || d.sms_opt_in === true,
+    "Please tick the text box so we can reach you, or add an email address.",
   );
+
+/** Forward the contact + consent into the Legacy OS CRM (best-effort, server-to-server). */
+async function forwardToCrm(input: {
+  name: string | null;
+  email: string | null;
+  phone: string | null;
+  marketingOptIn: boolean;
+  smsOptIn: boolean;
+}): Promise<void> {
+  try {
+    // Overridable so preview/test runs can point at a sink instead of the
+    // live CRM. Defaults to production — an unset env var must never silently
+    // stop real submissions reaching Legacy OS.
+    const crmUrl =
+      process.env.LEGACY_OS_CRM_URL ||
+      "https://legacy-os.thelegacyops.com/api/v1/contacts";
+    await fetch(crmUrl, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        name: input.name || input.email || input.phone,
+        email: input.email || undefined,
+        phone: input.phone || undefined,
+        source_site: "eddiesflower.com",
+        form_tag: "waitlist",
+        marketing_opt_in: input.marketingOptIn,
+        sms_opt_in: input.smsOptIn,
+        consent_text: CONSENT_TEXT,
+        consent_version: CONSENT_VERSION,
+      }),
+    });
+  } catch {
+    // best-effort — never block the submission
+  }
+}
 
 function extractIp(req: NextRequest): string {
   const xff = req.headers.get("x-forwarded-for");
@@ -84,6 +147,8 @@ export async function POST(req: NextRequest) {
   const { email: emailRaw, name, phone: phoneRaw } = parsed.data;
   const emailNormalized = emailRaw.toLowerCase();
   const phoneNormalized = phoneRaw ? normalizePhone(phoneRaw) : "";
+  const marketingOptIn = parsed.data.marketing_opt_in !== false; // default ON
+  const smsOptIn = parsed.data.sms_opt_in === true; // affirmative only
 
   const ip = extractIp(req);
   const rl = checkRateLimit(ip);
@@ -104,13 +169,19 @@ export async function POST(req: NextRequest) {
       email: emailNormalized || null,
       phone: phoneNormalized || null,
       name: name || null,
-      consentedToMarketing: true,
+      consentedToMarketing: marketingOptIn,
       ageGateAttested: false,
       ipAddress: ip === "unknown" ? null : ip,
       userAgent,
       status: "new",
       metadata: {
         path: req.headers.get("referer") || null,
+        marketing_opt_in: marketingOptIn,
+        sms_opt_in: smsOptIn,
+        consent_text: CONSENT_TEXT,
+        sms_consent_text: smsOptIn ? SMS_CONSENT_TEXT : null,
+        consent_version: CONSENT_VERSION,
+        consent_captured_at: new Date().toISOString(),
       },
     });
   } catch (err) {
@@ -122,22 +193,31 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // Outbound emails — best-effort, never block the response.
-  const sendOps: Promise<unknown>[] = [];
+  // Outbound side-effects — best-effort, never block the response.
+  const sendOps: Promise<unknown>[] = [
+    forwardToCrm({
+      name: name || null,
+      email: emailNormalized || null,
+      phone: phoneNormalized || null,
+      marketingOptIn,
+      smsOptIn,
+    }),
+  ];
+
   if (emailNormalized) {
     sendOps.push(
       resend.emails.send({
         from: FROM,
         to: emailNormalized,
-        subject: "You're on the list — Eddie's Flowers",
+        subject: "Your Grand Opening invitation — Eddie's Flowers",
         text: [
           `Hi${name ? " " + name : ""},`,
           ``,
-          `Thanks for joining the Eddie's Flowers founding-members list.`,
-          `We'll reach out the day the doors open so you can be among the`,
-          `first through.`,
+          `Thanks for putting your name down. You're on the founding-members`,
+          `list, which means you'll get the date and time of our Grand Opening`,
+          `before we announce it anywhere else.`,
           ``,
-          `We're opening soon at 23 Rindge State Road, Ashburnham, MA.`,
+          `We're opening at 23 Rindge State Road, Ashburnham, MA.`,
           ``,
           `If this wasn't you, just ignore this — we won't email you again`,
           `unless you ask.`,
@@ -151,17 +231,20 @@ export async function POST(req: NextRequest) {
       }),
     );
   }
+
   sendOps.push(
     resend.emails.send({
       from: FROM,
       to: NOTIFICATION_RECIPIENTS,
-      subject: `New waitlist signup: ${emailNormalized || phoneNormalized || "(unknown)"}`,
+      subject: `New Grand Opening invitation: ${emailNormalized || phoneNormalized || "(unknown)"}`,
       text: [
-        `New launch waitlist signup for Eddie's Flowers.`,
+        `New Grand Opening invitation request for Eddie's Flowers.`,
         ``,
         `Email:    ${emailNormalized || "(not provided)"}`,
         `Phone:    ${phoneNormalized || "(not provided)"}`,
         `Name:     ${name || "(not provided)"}`,
+        `Email OK: ${marketingOptIn ? "yes" : "NO — do not email marketing"}`,
+        `Text OK:  ${smsOptIn ? "yes" : "NO — do not text this number"}`,
         `IP:       ${ip}`,
         `Agent:    ${userAgent || "(unknown)"}`,
         `Source:   launch_waitlist`,
@@ -174,7 +257,7 @@ export async function POST(req: NextRequest) {
     for (const r of results) {
       if (r.status === "rejected") {
         // eslint-disable-next-line no-console
-        console.error("[waitlist] email send failed:", r.reason);
+        console.error("[waitlist] side-effect failed:", r.reason);
       }
     }
   });

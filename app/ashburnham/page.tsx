@@ -62,7 +62,7 @@ const PAGE_FAQ = [
   },
   {
     q: "When does Eddie's open?",
-    a: "We're still in buildout and don't have a confirmed opening date yet. Join the waitlist on our home page and we'll send you a note the day the doors open.",
+    a: "We're still in buildout and don't have a confirmed opening date yet. Ask for a Grand Opening invitation on our home page and we'll send you the date and time before we announce it anywhere else.",
   },
   {
     q: "Are you local, or part of a chain?",
@@ -160,7 +160,7 @@ export default function AshburnhamPage() {
               href="/#waitlist"
               className="glow-leaf mt-10 inline-flex items-center gap-2 rounded-full bg-leaf-green px-8 py-4 text-base font-semibold text-white sm:text-lg"
             >
-              Join the waitlist
+              Get my Grand Opening invite
               <span aria-hidden="true">→</span>
             </Link>
             <p className="mt-4 text-xs uppercase tracking-[0.2em] text-white/40">
@@ -399,7 +399,7 @@ export default function AshburnhamPage() {
               href="/#waitlist"
               className="glow-leaf mt-10 inline-flex items-center gap-2 rounded-full bg-leaf-green px-8 py-4 text-base font-semibold text-white sm:text-lg"
             >
-              Join the waitlist
+              Get my Grand Opening invite
               <span aria-hidden="true">→</span>
             </Link>
           </div>

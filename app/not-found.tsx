@@ -51,7 +51,7 @@ export default function NotFound() {
           href="/#waitlist"
           className="inline-flex items-center gap-2 rounded-full border border-white/20 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:border-leaf-green-soft hover:text-leaf-green-soft"
         >
-          Join the waitlist
+          Get my Grand Opening invite
         </Link>
       </div>
     </main>
