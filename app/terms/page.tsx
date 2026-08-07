@@ -24,7 +24,7 @@ export default function TermsPage() {
           <p className="mt-3 leading-relaxed">
             eddiesflower.com is an informational marketing site for Eddie&apos;s
             Flowers Dispensary, a Massachusetts-licensed adult-use marijuana retailer
-            (License #MRN284579, Provisional) preparing to open at 23 Rindge State
+            (License #MR284579, Provisional) preparing to open at 23 Rindge State
             Road, Ashburnham, MA 01430.
           </p>
           <p className="mt-3 leading-relaxed">

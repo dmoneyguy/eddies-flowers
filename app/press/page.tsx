@@ -31,7 +31,7 @@ export default function Press() {
               </p>
               <p>Quick facts:</p>
               <ul className="ml-6 list-disc space-y-1 text-base">
-                <li>Massachusetts Licensed Adult-Use Retailer #MRN284579 (Provisional)</li>
+                <li>Massachusetts Licensed Adult-Use Retailer #MR284579 (Provisional)</li>
                 <li>Location: 23 Rindge State Road, Ashburnham, MA 01430</li>
                 <li>Phone: (978) 883-4026</li>
                 <li>Email: info@eddiesflower.com</li>

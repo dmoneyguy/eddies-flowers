@@ -197,7 +197,7 @@ export function AgeGate({ onConfirm }: AgeGateProps) {
       </div>
 
       <p className="mt-10 max-w-md text-balance text-[11px] uppercase tracking-[0.16em] text-white/35">
-        Massachusetts Licensed Adult-Use Marijuana Retailer #MRN284579 (Provisional)
+        Massachusetts Licensed Adult-Use Marijuana Retailer #MR284579 (Provisional)
         · Keep marijuana products out of reach of children
       </p>
     </div>

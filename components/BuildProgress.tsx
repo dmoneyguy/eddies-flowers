@@ -29,7 +29,69 @@ import Image from "next/image";
 const PHOTO_DIR = path.join(process.cwd(), "public", "photos");
 const EXT = /\.(jpe?g|png|webp|avif)$/i;
 
-type Photo = { src: string; caption: string | null; alt: string };
+type Photo = {
+  src: string;
+  caption: string | null;
+  alt: string;
+  width: number;
+  height: number;
+};
+
+// Read the intrinsic pixel size straight out of the file header.
+//
+// The hero photo renders at its OWN aspect ratio rather than being cropped
+// into a fixed 16:9 frame, so a portrait phone photo of a building doesn't get
+// beheaded. That means we need real dimensions at build time, and adding an
+// image-size dependency for two file formats isn't worth it — JPEG and PNG
+// headers are simple enough to read directly.
+//
+// Falls back to 4:3 if a format isn't recognised; object-cover then handles it,
+// which is imperfect but never broken.
+function readSize(file: string): { width: number; height: number } {
+  const FALLBACK = { width: 1200, height: 900 };
+  let buf: Buffer;
+  try {
+    buf = fs.readFileSync(file);
+  } catch {
+    return FALLBACK;
+  }
+
+  // PNG: IHDR width/height are big-endian uint32 at bytes 16 and 20.
+  if (buf.length > 24 && buf.readUInt32BE(0) === 0x89504e47) {
+    return { width: buf.readUInt32BE(16), height: buf.readUInt32BE(20) };
+  }
+
+  // JPEG: walk the segment chain to the first SOF marker and read its
+  // height/width. Skips APPn blocks (EXIF, ICC) without parsing them.
+  if (buf.length > 4 && buf[0] === 0xff && buf[1] === 0xd8) {
+    let i = 2;
+    while (i < buf.length - 9) {
+      if (buf[i] !== 0xff) {
+        i++;
+        continue;
+      }
+      const marker = buf[i + 1]!;
+      // SOF0..SOF15, excluding DHT (c4), JPGA (c8) and DAC (cc)
+      const isSOF =
+        marker >= 0xc0 &&
+        marker <= 0xcf &&
+        marker !== 0xc4 &&
+        marker !== 0xc8 &&
+        marker !== 0xcc;
+      if (isSOF) {
+        return {
+          height: buf.readUInt16BE(i + 5),
+          width: buf.readUInt16BE(i + 7),
+        };
+      }
+      const len = buf.readUInt16BE(i + 2);
+      if (len < 2) break;
+      i += 2 + len;
+    }
+  }
+
+  return FALLBACK; // webp / avif — rare here, and cover-cropping is acceptable
+}
 
 function readPhotos(): Photo[] {
   let files: string[];
@@ -51,9 +113,12 @@ function readPhotos(): Photo[] {
 
   return files.map((f) => {
     const caption = typeof captions[f] === "string" ? captions[f]! : null;
+    const { width, height } = readSize(path.join(PHOTO_DIR, f));
     return {
       src: `/photos/${f}`,
       caption,
+      width,
+      height,
       // Alt text has to describe something. Fall back to a truthful generic
       // rather than shipping an empty alt on meaningful content.
       alt:
@@ -94,13 +159,16 @@ export function BuildProgress() {
         </p>
 
         <figure data-reveal className="mt-12">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl bg-charcoal-black/5 shadow-[0_30px_70px_-30px_rgba(43,43,43,0.45)] sm:aspect-[16/9]">
+          {/* Natural aspect ratio, capped by height so a tall portrait shot
+              doesn't take over the page. No crop — the building stays whole. */}
+          <div className="overflow-hidden rounded-3xl bg-charcoal-black/5 shadow-[0_30px_70px_-30px_rgba(43,43,43,0.45)]">
             <Image
               src={hero!.src}
               alt={hero!.alt}
-              fill
+              width={hero!.width}
+              height={hero!.height}
               sizes="(max-width: 896px) 100vw, 896px"
-              className="object-cover"
+              className="mx-auto h-auto w-full max-h-[78vh] object-contain"
               priority={false}
             />
           </div>

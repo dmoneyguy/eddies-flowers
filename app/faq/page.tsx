@@ -39,7 +39,7 @@ const FAQ = [
   },
   {
     q: "Are you medical or adult-use?",
-    a: "Eddie's Flowers is an adult-use (recreational) Massachusetts cannabis retailer. License #MRN284579 (Provisional).",
+    a: "Eddie's Flowers is an adult-use (recreational) Massachusetts cannabis retailer. License #MR284579 (Provisional).",
   },
   {
     q: "Will you deliver?",

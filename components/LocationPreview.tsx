@@ -17,7 +17,7 @@ import {
   HOURS_DAYS_DISPLAY,
 } from "@/lib/contact";
 
-const LICENSE_NUMBER = process.env.NEXT_PUBLIC_LICENSE_NUMBER || "MRN284579";
+const LICENSE_NUMBER = process.env.NEXT_PUBLIC_LICENSE_NUMBER || "MR284579";
 
 export function LocationPreview() {
   const mapsUrl = `https://www.google.com/maps?q=${encodeURIComponent(ADDRESS_FULL)}&output=embed`;
