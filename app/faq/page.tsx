@@ -7,7 +7,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.eddiesflower.c
 const FAQ = [
   {
     q: "When does Eddie's Flowers Dispensary open?",
-    a: "We're still in buildout and don't have a confirmed opening date yet. Join our waitlist on the home page and we'll send you a note the day we open.",
+    a: "We don't have a confirmed date yet, and here's exactly why: the building is finished and has its certificate of occupancy, and the last step is our final inspection with the Cannabis Control Commission. The Commission schedules that, not us. Ask for a Grand Opening invitation on our home page and we'll send you the date and time before we announce it anywhere else.",
   },
   {
     q: "Where is Eddie's Flowers located?",
@@ -19,7 +19,7 @@ const FAQ = [
   },
   {
     q: "What are Eddie's Flowers hours?",
-    a: "Our planned operating hours are 8:30 AM to 10:00 PM, daily. Hours will be confirmed when we open.",
+    a: "Our planned operating hours are Monday to Friday 10:00 AM to 9:00 PM, Saturday 9:00 AM to 8:00 PM, and Sunday 9:00 AM to 7:00 PM. Hours will be confirmed when we open.",
   },
   {
     q: "How do I contact Eddie's Flowers?",
@@ -35,19 +35,19 @@ const FAQ = [
   },
   {
     q: "What do you sell?",
-    a: "Curated flower from licensed Massachusetts cultivators, plus edibles, concentrates, vapes, and pre-rolls. Our menu launches when we open.",
+    a: "Curated flower from licensed Massachusetts cultivators, plus edibles, concentrates, vapes, pre-rolls and accessories. There is no menu yet — Massachusetts does not permit a retailer to hold marijuana before its final licence issues, so we have no inventory. See /menu for what we will carry, and /first-visit if you have never been to a dispensary before.",
   },
   {
     q: "Are you medical or adult-use?",
-    a: "Eddie's Flowers is an adult-use (recreational) Massachusetts cannabis retailer. License #MRN284579 (Provisional).",
+    a: "Eddie's Flowers is an adult-use (recreational) Massachusetts cannabis retailer. License #MR284579 (Provisional).",
   },
   {
     q: "Will you deliver?",
     a: "Delivery is a post-opening goal — we plan to offer local delivery in compliance with Massachusetts CCC rules once we are operational.",
   },
   {
-    q: "How do I get on the waitlist?",
-    a: "Visit our home page and submit the waitlist form with your name and email or phone. We'll send you one note the day the doors open. No spam, no list-selling.",
+    q: "How do I get an invitation to the Grand Opening?",
+    a: "Visit our home page and submit the invitation form with your name and email or phone. Founding members get the opening date and time before it is announced anywhere else, and are through the door on day one. Massachusetts law does not permit a dispensary to offer discounts, points or loyalty rewards, so that is exactly what it is and nothing more. No spam, no list-selling.",
   },
   {
     q: "Are you a chain or locally owned?",

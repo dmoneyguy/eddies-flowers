@@ -17,7 +17,7 @@ export function Hero() {
   return (
     <section
       id="hero-canvas"
-      className="mesh-canvas spotlight relative isolate overflow-hidden px-6 pt-20 pb-24 sm:pt-28 sm:pb-32"
+      className="mesh-canvas spotlight relative isolate overflow-hidden px-6 pt-28 pb-24 sm:pt-36 sm:pb-32"
     >
       {/* Ambient drifting leaves */}
       {LEAVES.map((leaf, i) => (
@@ -128,11 +128,11 @@ export function Hero() {
             data-magnetic
             className="glow-leaf magnetic inline-flex items-center gap-2 rounded-full bg-leaf-green px-9 py-4 text-base font-semibold text-white sm:text-lg"
           >
-            Save my spot on the list
+            Get my Grand Opening invite
             <span aria-hidden="true">→</span>
           </a>
           <p className="mt-4 text-xs uppercase tracking-[0.2em] text-white/40">
-            Join the waitlist · No spam · One note when we open
+            Grand Opening invitations · No spam · Date sent before we announce it
           </p>
         </div>
 

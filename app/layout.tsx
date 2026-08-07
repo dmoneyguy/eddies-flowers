@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Poppins, Fraunces, Caveat } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { SiteHeader } from "@/components/SiteHeader";
 import { AgeGateProvider } from "@/components/AgeGateProvider";
 import {
   PHONE_E164,
@@ -42,18 +43,18 @@ export const metadata: Metadata = {
     template: "%s | Eddie's Flowers",
   },
   description:
-    "The only dispensary in Ashburnham, MA. Eddie's Flowers opens soon at 23 Rindge State Road. Join the waitlist to be first through the doors.",
+    "The only dispensary in Ashburnham, MA. Eddie's Flowers opens soon at 23 Rindge State Road. Ask for a Grand Opening invitation and be first through the doors.",
   keywords: [
     "Eddie's Flowers",
     "Ashburnham cannabis dispensary",
     "Massachusetts marijuana retailer",
     "MA dispensary opening 2026",
-    "MRN284579",
+    "MR284579",
   ],
   openGraph: {
     title: "Eddie's Flowers Dispensary — Coming Soon",
     description:
-      "Ashburnham's new spot for flower. Join the waitlist to be first through the doors.",
+      "Ashburnham's new spot for flower. Ask for a Grand Opening invitation and be first through the doors.",
     url: SITE_URL,
     siteName: "Eddie's Flowers",
     type: "website",
@@ -116,7 +117,7 @@ export default function RootLayout({
                   name: "Eddie's Flowers Dispensary",
                   alternateName: ["Eddie's Flowers", "Eddies Flowers Dispensary"],
                   description:
-                    "The only adult-use cannabis dispensary in Ashburnham, MA. Massachusetts licensed (MRN284579), opening soon at 23 Rindge State Road. Curated flower, honest answers, no marketing-speak.",
+                    "The only adult-use cannabis dispensary in Ashburnham, MA. Massachusetts licensed (MR284579), opening soon at 23 Rindge State Road. Curated flower, honest answers, no marketing-speak.",
                   url: SITE_URL,
                   logo: `${SITE_URL}/icon-512.png`,
                   image: `${SITE_URL}/og.png`,
@@ -133,8 +134,18 @@ export default function RootLayout({
                   },
                   geo: {
                     "@type": "GeoCoordinates",
-                    latitude: 42.6376,
-                    longitude: -71.9134,
+                    // 23 Rindge State Road. Verified 7 August 2026 two ways:
+                    // the address geocodes here, and the GPS tags on the
+                    // build photographs in public/photos/ land within metres
+                    // of it.
+                    //
+                    // The previous value, 42.6376 / -71.9134, was 6.2km away
+                    // and reverse-geocodes to 7 Chapel Street, Ashburnham. We
+                    // were handing Google and every AI assistant the wrong
+                    // location for a shop whose entire claim is being the only
+                    // dispensary in town.
+                    latitude: 42.68792,
+                    longitude: -71.8793,
                   },
                   areaServed: [
                     { "@type": "City", name: "Ashburnham",  containedInPlace: { "@type": "State", name: "Massachusetts" } },
@@ -150,7 +161,7 @@ export default function RootLayout({
                   currenciesAccepted: "USD",
                   paymentAccepted: "Cash, Debit",
                   priceRange: "$$",
-                  identifier: { "@type": "PropertyValue", propertyID: "MA-CCC-License", value: "MRN284579" },
+                  identifier: { "@type": "PropertyValue", propertyID: "MA-CCC-License", value: "MR284579" },
                   parentOrganization: { "@id": `${SITE_URL}/#org` },
                 },
                 {
@@ -176,10 +187,17 @@ export default function RootLayout({
         />
       </head>
       <body>
+        {/* Without this, [data-reveal] { opacity: 0 } in globals.css leaves
+            everything below the hero invisible whenever JavaScript fails to
+            load. The HTML is all there; only the CSS is hiding it. */}
+        <noscript>
+          <style>{`[data-reveal]{opacity:1 !important;transform:none !important}`}</style>
+        </noscript>
         <a href="#main" className="skip-link">
           Skip to main content
         </a>
         <AgeGateProvider />
+        <SiteHeader />
         {children}
         <Analytics />
       </body>

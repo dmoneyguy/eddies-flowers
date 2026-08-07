@@ -12,28 +12,29 @@ import {
   CONTACT_EMAIL,
   CONTACT_EMAIL_HREF,
   HOURS_DISPLAY,
+  HOURS_DAYS_DISPLAY,
 } from "@/lib/contact";
 
-const LICENSE_NUMBER = process.env.NEXT_PUBLIC_LICENSE_NUMBER || "MRN284579";
+const LICENSE_NUMBER = process.env.NEXT_PUBLIC_LICENSE_NUMBER || "MR284579";
 
 export function Footer() {
   return (
     <footer className="bg-charcoal-black px-6 py-12 text-white/80">
       <div className="mx-auto max-w-4xl space-y-8 text-sm leading-relaxed">
-        <div className="grid gap-6 sm:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-white/40">
               Work with us
             </p>
             <ul className="mt-2 space-y-1">
               <li>
-                <Link className="hover:text-leaf-green" href="/careers">Careers</Link>
+                <Link className="inline-flex min-h-11 items-center hover:text-leaf-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green" href="/careers">Careers</Link>
               </li>
               <li>
-                <Link className="hover:text-leaf-green" href="/wholesale">Brands &amp; wholesale</Link>
+                <Link className="inline-flex min-h-11 items-center hover:text-leaf-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green" href="/wholesale">Brands &amp; wholesale</Link>
               </li>
               <li>
-                <Link className="hover:text-leaf-green" href="/press">Press inquiries</Link>
+                <Link className="inline-flex min-h-11 items-center hover:text-leaf-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green" href="/press">Press inquiries</Link>
               </li>
             </ul>
           </div>
@@ -43,12 +44,29 @@ export function Footer() {
             </p>
             <ul className="mt-2 space-y-1">
               <li>
-                <a className="hover:text-leaf-green" href={PHONE_TEL_HREF}>{PHONE_DISPLAY}</a>
+                <a className="inline-flex min-h-11 items-center hover:text-leaf-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green" href={PHONE_TEL_HREF}>{PHONE_DISPLAY}</a>
               </li>
               <li>
-                <a className="break-all hover:text-leaf-green" href={CONTACT_EMAIL_HREF}>{CONTACT_EMAIL}</a>
+                <a className="break-all inline-flex min-h-11 items-center hover:text-leaf-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green" href={CONTACT_EMAIL_HREF}>{CONTACT_EMAIL}</a>
               </li>
-              <li className="text-white/55">{HOURS_DISPLAY}</li>
+              <li className="pt-1 text-white/55">{HOURS_DISPLAY}</li>
+              <li className="text-white/45">{HOURS_DAYS_DISPLAY}</li>
+            </ul>
+          </div>
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wider text-white/40">
+              Before you visit
+            </p>
+            <ul className="mt-2 space-y-1">
+              <li>
+                <Link className="inline-flex min-h-11 items-center hover:text-leaf-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green" href="/menu">Menu</Link>
+              </li>
+              <li>
+                <Link className="inline-flex min-h-11 items-center hover:text-leaf-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green" href="/first-visit">Your first visit</Link>
+              </li>
+              <li>
+                <Link className="inline-flex min-h-11 items-center hover:text-leaf-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green" href="/faq">Questions</Link>
+              </li>
             </ul>
           </div>
           <div>
@@ -82,10 +100,10 @@ export function Footer() {
         </div>
 
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-white/10 pt-6">
-          <Link className="hover:text-leaf-green" href="/faq">FAQ</Link>
-          <Link className="hover:text-leaf-green" href="/privacy">Privacy</Link>
-          <Link className="hover:text-leaf-green" href="/terms">Terms</Link>
-          <Link className="hover:text-leaf-green" href="/accessibility">Accessibility</Link>
+          <Link className="inline-flex min-h-11 items-center hover:text-leaf-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green" href="/faq">FAQ</Link>
+          <Link className="inline-flex min-h-11 items-center hover:text-leaf-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green" href="/privacy">Privacy</Link>
+          <Link className="inline-flex min-h-11 items-center hover:text-leaf-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green" href="/terms">Terms</Link>
+          <Link className="inline-flex min-h-11 items-center hover:text-leaf-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green" href="/accessibility">Accessibility</Link>
           <span className="ml-auto text-white/40">Operated by Legacy Operations.</span>
         </div>
       </div>

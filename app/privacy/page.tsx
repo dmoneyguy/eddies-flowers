@@ -18,7 +18,7 @@ export default function PrivacyPage() {
           <h2 className="mt-10 text-2xl font-bold">Who we are</h2>
           <p className="mt-3 leading-relaxed">
             Eddie&apos;s Flowers Dispensary (&quot;Eddie&apos;s Flowers,&quot; &quot;we,&quot; &quot;us&quot;) is a
-            Massachusetts-licensed adult-use marijuana retailer (License #MRN284579,
+            Massachusetts-licensed adult-use marijuana retailer (License #MR284579,
             Provisional) preparing to open at 23 Rindge State Road, Ashburnham, MA
             01430. This site is operated by Legacy Operations on behalf of Eddie&apos;s
             Flowers, Inc.

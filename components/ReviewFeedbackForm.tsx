@@ -84,21 +84,25 @@ export function ReviewFeedbackForm() {
     <form onSubmit={onSubmit} className="space-y-3">
       <div className="grid gap-3 sm:grid-cols-2">
         <input
+          id="rf-name" aria-label="Your name (optional)"
           name="name" type="text" autoComplete="name" placeholder="Your name (optional)"
           className="w-full rounded-lg border border-border bg-white px-4 py-3 text-base text-charcoal-black placeholder:text-text-muted"
         />
         <input
+          id="rf-email" aria-label="Your email address"
           name="email" type="email" autoComplete="email" required placeholder="Email"
           className="w-full rounded-lg border border-border bg-white px-4 py-3 text-base text-charcoal-black placeholder:text-text-muted"
         />
       </div>
       <textarea
+        id="rf-message" aria-label="Tell us what happened"
         name="message" required rows={4} maxLength={2000}
         placeholder="What happened? Good or bad — we'd rather know."
         className="w-full rounded-lg border border-border bg-white px-4 py-3 text-base text-charcoal-black placeholder:text-text-muted"
       />
       <input
         type="text" name="website" tabIndex={-1} autoComplete="off"
+        aria-label="Leave this field empty"
         aria-hidden="true" className="hidden"
       />
       {state.kind === "error" && (

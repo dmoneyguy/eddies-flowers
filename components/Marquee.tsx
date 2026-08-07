@@ -15,7 +15,7 @@ const DEFAULT_ITEMS = [
   "Ashburnham · MA",
   "Ashburnham's only dispensary",
   "MA Licensed Adult-Use Retailer",
-  "Founding Members First Through The Doors",
+  "First Through The Doors On Day One",
 ];
 
 export function Marquee({ items = DEFAULT_ITEMS }: MarqueeProps) {

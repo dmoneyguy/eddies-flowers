@@ -16,7 +16,10 @@ const VALUES = [
     body: "Real questions get real answers. No upsell, no scripts — just folks who actually know the flower.",
   },
   {
-    icon: "/icons/email.svg",
+    // Was email.svg — an envelope, which means "contact us", on a card that is
+    // about being local. location.svg is the pin, which is what it should have
+    // been all along.
+    icon: "/icons/location.svg",
     title: "Built for Ashburnham",
     body: "Run by locals in North Worcester County. We want to be your neighbor — your favorite Tuesday-afternoon errand.",
   },
