@@ -16,9 +16,24 @@
 // framed as "start low, go slow", never as a therapeutic recommendation. No
 // prices — 935 CMR 500.105(4)(b)18. No discounts or rewards — (4)(b)20.
 //
-// The purchase limit stated below is the Massachusetts adult-use possession /
-// transaction limit: one ounce of flower, of which no more than five grams may
-// be concentrate. If that regulation changes, change this page.
+// The limit stated below is the Massachusetts adult-use PURCHASE limit — what a
+// retailer may sell to one adult — and it is NOT the possession limit. Those are
+// different numbers and only the purchase limit belongs on this page.
+//
+// 935 CMR 500.140(4)(c) (eff. 06/18/2026): "A retailer may not sell to an
+// individual more than two ounces of Marijuana or its dry weight equivalent in
+// Marijuana concentrate or Edibles per transaction." The same two-ounce ceiling
+// applies per day at 500.140(3)(a). The base doubled from one ounce to two under
+// H.5350, effective 2026-04-19.
+//
+// The equivalents — 10 g of active THC in concentrate, 1,000 mg of active THC in
+// edibles — are the CCC Administrative Order on Equivalency and Conversion
+// Standards, effective 2026-04-19. The regulation's sub-items state the ratio in
+// one-ounce terms and never print those two figures, so cite the Order for them.
+//
+// It is ONE combined limit on a flower-equivalent basis, not one allowance per
+// category, and the equivalents are grams/milligrams of ACTIVE THC, not product
+// weight. If either regulation changes, change this page.
 
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -59,7 +74,7 @@ const STEPS = [
   {
     n: "05",
     title: "There's a legal limit",
-    body: "Massachusetts allows an adult to buy up to one ounce of cannabis in a single transaction, of which no more than five grams may be concentrate. We'll tell you where you are against that as we go.",
+    body: "Massachusetts allows an adult to buy up to two ounces of cannabis flower in a single transaction, or the equivalent in other products — 10 grams of THC in concentrate, or 1,000 milligrams of THC in edibles. It's one combined limit, not one of each. We'll tell you where you are against that as we go.",
   },
   {
     n: "06",
@@ -109,7 +124,7 @@ export default function FirstVisitPage() {
         name: "How much cannabis can I buy at once in Massachusetts?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Massachusetts allows an adult 21 or older to purchase up to one ounce of cannabis in a single transaction, of which no more than five grams may be concentrate.",
+          text: "Massachusetts allows an adult 21 or older to purchase up to two ounces of cannabis flower in a single transaction, or its equivalent in other products — 10 grams of active THC in concentrate, or 1,000 milligrams of active THC in edibles. It is one combined limit, not one allowance for each category.",
         },
       },
       {
