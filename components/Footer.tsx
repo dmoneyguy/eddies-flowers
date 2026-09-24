@@ -104,6 +104,9 @@ export function Footer() {
           <Link className="inline-flex min-h-11 items-center hover:text-leaf-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green" href="/privacy">Privacy</Link>
           <Link className="inline-flex min-h-11 items-center hover:text-leaf-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green" href="/terms">Terms</Link>
           <Link className="inline-flex min-h-11 items-center hover:text-leaf-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green" href="/accessibility">Accessibility</Link>
+          {/* Staff time clock (Legacy OS). The break-room tablet is the main clock; this is for clocking
+              in from a phone when off site. Sign-in required there; location is recorded. */}
+          <a className="inline-flex min-h-11 items-center hover:text-leaf-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green" href="https://legacy-os.thelegacyops.com/clock">Employee login</a>
           <span className="ml-auto text-white/40">Operated by Legacy Operations.</span>
         </div>
       </div>
