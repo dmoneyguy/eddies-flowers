@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Poppins, Fraunces, Caveat } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { SiteHeader } from "@/components/SiteHeader";
-import { AgeGateProvider } from "@/components/AgeGateProvider";
+import { Footer } from "@/components/Footer";
 import {
   PHONE_E164,
   CONTACT_EMAIL,
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
         url: "/og.png",
         width: 1200,
         height: 630,
-        alt: "Eddie's Flowers Dispensary — Coming Soon to Ashburnham, MA",
+        alt: "Eddie's Flowers · Ashburnham, MA · Adults 21+",
       },
     ],
   },
@@ -154,7 +154,6 @@ export default function RootLayout({
                     { "@type": "City", name: "Fitchburg",   containedInPlace: { "@type": "State", name: "Massachusetts" } },
                     { "@type": "City", name: "Westminster", containedInPlace: { "@type": "State", name: "Massachusetts" } },
                     { "@type": "City", name: "Ashby",       containedInPlace: { "@type": "State", name: "Massachusetts" } },
-                    { "@type": "City", name: "Rindge",      containedInPlace: { "@type": "State", name: "New Hampshire" } },
                     { "@type": "AdministrativeArea", name: "Worcester County" },
                     { "@type": "State", name: "Massachusetts" },
                   ],
@@ -187,18 +186,24 @@ export default function RootLayout({
         />
       </head>
       <body>
-        {/* Without this, [data-reveal] { opacity: 0 } in globals.css leaves
-            everything below the hero invisible whenever JavaScript fails to
-            load. The HTML is all there; only the CSS is hiding it. */}
+        {/* No JavaScript, no site. The age gate (proxy.ts) needs JavaScript
+            to record the attestation, so a visitor without it must not see
+            content either — 935 CMR 500.105(4)(b)13. This hides every other
+            child of <body> and shows one line instead. */}
         <noscript>
-          <style>{`[data-reveal]{opacity:1 !important;transform:none !important}`}</style>
+          <style>{`body>*:not(noscript){display:none !important}`}</style>
+          <div className="flex min-h-screen items-center justify-center bg-charcoal-deep px-6 text-center text-base text-white">
+            <p>You must be 21 or older and have JavaScript enabled to enter this site.</p>
+          </div>
         </noscript>
         <a href="#main" className="skip-link">
           Skip to main content
         </a>
-        <AgeGateProvider />
         <SiteHeader />
         {children}
+        {/* Footer carries the 935 CMR 500.105(4)(a)7/(a)8 warnings, so it lives
+            here, once, rather than in each page — every route gets it. */}
+        <Footer />
         <Analytics />
       </body>
     </html>

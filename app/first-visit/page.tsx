@@ -37,7 +37,6 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Footer } from "@/components/Footer";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { ADDRESS_FULL, HOURS_SENTENCE, PHONE_DISPLAY, PHONE_TEL_HREF } from "@/lib/contact";
 
@@ -93,8 +92,8 @@ const FIRST_TIME = [
     a: "Edibles are slow and the delay catches almost everyone out. Most bad first experiences are somebody taking a second dose at the forty-minute mark because the first hadn't landed yet.",
   },
   {
-    q: "You can't overdose fatally, but you can have a rotten few hours.",
-    a: "Too much can mean anxiety, a racing heart, nausea and disorientation. It passes. Water, somewhere quiet, someone you trust nearby.",
+    q: "Know what too much feels like.",
+    a: "Too much can mean anxiety, a racing heart, nausea and disorientation. Water, somewhere quiet, someone you trust nearby. If you are worried, call Poison Control on 1-800-222-1222, or 911.",
   },
   {
     q: "Don't mix it with alcohol on your first go.",
@@ -102,7 +101,7 @@ const FIRST_TIME = [
   },
   {
     q: "Keep it locked away from children and pets.",
-    a: "Edibles look like sweets because they are sweets. In case of accidental ingestion, call Poison Control on 1-800-222-1222, or 911.",
+    a: "Edibles can look like ordinary food. In case of accidental ingestion, call Poison Control on 1-800-222-1222, or 911.",
   },
 ];
 
@@ -264,7 +263,6 @@ export default function FirstVisitPage() {
           </div>
         </section>
       </main>
-      <Footer />
       <ScrollReveal />
     </>
   );

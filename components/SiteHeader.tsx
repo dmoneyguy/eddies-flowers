@@ -25,7 +25,6 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { PHONE_DISPLAY, PHONE_TEL_HREF } from "@/lib/contact";
 
@@ -122,14 +121,8 @@ export function SiteHeader() {
           className="flex h-11 items-center gap-2 rounded-lg px-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green"
           aria-label="Eddie's Flowers Dispensary — home"
         >
-          <Image
-            src="/icons/cannabis-leaf.svg"
-            alt=""
-            width={24}
-            height={24}
-            aria-hidden="true"
-            style={{ filter: "brightness(0) invert(1)" }}
-          />
+          {/* Wordmark only. The leaf icon that used to sit here was an image
+              of marijuana in the Brand Name — 935 CMR 500.105(4)(a)1. */}
           <span className="display text-base font-medium text-white sm:text-lg">
             Eddie&apos;s Flowers
           </span>

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Footer } from "@/components/Footer";
 import { ReviewFeedbackForm } from "@/components/ReviewFeedbackForm";
 
 /**
@@ -109,7 +108,6 @@ export default function Review() {
           </div>
         </section>
       </main>
-      <Footer />
     </>
   );
 }

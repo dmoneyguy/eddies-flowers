@@ -26,7 +26,6 @@ import { WaitlistSection } from "@/components/WaitlistSection";
 import { ProductRequestSection } from "@/components/ProductRequestSection";
 import { HiringBanner } from "@/components/HiringBanner";
 import { LocationPreview } from "@/components/LocationPreview";
-import { Footer } from "@/components/Footer";
 import { ScrollReveal } from "@/components/ScrollReveal";
 
 export default function Home() {
@@ -44,7 +43,6 @@ export default function Home() {
         <HiringBanner />
         <LocationPreview />
       </main>
-      <Footer />
       <ScrollReveal />
     </>
   );

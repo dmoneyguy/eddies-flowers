@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "Page Not Found",
@@ -13,19 +12,6 @@ export default function NotFound() {
       id="main"
       className="mesh-canvas relative isolate flex min-h-screen flex-col items-center justify-center overflow-hidden px-6 py-20 text-center"
     >
-      <div
-        className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center opacity-[0.05]"
-        aria-hidden="true"
-      >
-        <Image
-          src="/icons/cannabis-leaf.svg"
-          alt=""
-          width={900}
-          height={900}
-          className="scale-150"
-        />
-      </div>
-
       <p className="text-xs font-semibold uppercase tracking-[0.32em] text-leaf-green-soft">
         404
       </p>

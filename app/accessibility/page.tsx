@@ -1,6 +1,5 @@
 // Accessibility Statement — v1 scope.
 
-import { Footer } from "@/components/Footer";
 
 export const metadata = { title: "Accessibility Statement" };
 
@@ -65,7 +64,6 @@ export default function AccessibilityPage() {
           </p>
         </article>
       </main>
-      <Footer />
     </>
   );
 }

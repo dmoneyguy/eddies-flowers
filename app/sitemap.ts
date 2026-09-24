@@ -12,7 +12,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/ashburnham`,   lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
     { url: `${SITE_URL}/winchendon`,   lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
     { url: `${SITE_URL}/gardner`,      lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
-    { url: `${SITE_URL}/rindge-nh`,    lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
     { url: `${SITE_URL}/westminster`,  lastModified: now, changeFrequency: "weekly",  priority: 0.7 },
     { url: `${SITE_URL}/ashby`,        lastModified: now, changeFrequency: "weekly",  priority: 0.7 },
     { url: `${SITE_URL}/wholesale`,    lastModified: now, changeFrequency: "weekly",  priority: 0.7 },

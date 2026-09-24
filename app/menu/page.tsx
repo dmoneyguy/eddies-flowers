@@ -20,7 +20,6 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Footer } from "@/components/Footer";
 import { ProductRequestSection } from "@/components/ProductRequestSection";
 import { ScrollReveal } from "@/components/ScrollReveal";
 import { HOURS_SENTENCE } from "@/lib/contact";
@@ -173,7 +172,6 @@ export default function MenuPage() {
 
         <ProductRequestSection />
       </main>
-      <Footer />
       <ScrollReveal />
     </>
   );

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Footer } from "@/components/Footer";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.eddiesflower.com";
 
@@ -15,7 +14,7 @@ const FAQ = [
   },
   {
     q: "What dispensaries are near Ashburnham, MA?",
-    a: "Eddie's Flowers is the only dispensary in Ashburnham town limits — opening soon at 23 Rindge State Road. The closest other dispensaries are United Cultivation in Ashby (about 5 miles) and Bud Barn in Winchendon (about 10 miles). For folks coming down from New Hampshire, Eddie's is the closest Massachusetts dispensary to the Rindge, NH border.",
+    a: "Eddie's Flowers is the only dispensary in Ashburnham town limits — opening soon at 23 Rindge State Road. The closest other dispensaries are United Cultivation in Ashby (about 5 miles) and Bud Barn in Winchendon (about 10 miles).",
   },
   {
     q: "What are Eddie's Flowers hours?",
@@ -27,7 +26,7 @@ const FAQ = [
   },
   {
     q: "Are you hiring?",
-    a: "Yes. We're hiring locally for budtender, keyholder, cannabis tech, compliance, delivery, and security roles. All Massachusetts cannabis retail workers must be 21 or older. Apply at /careers.",
+    a: "Yes. We're hiring locally for budtender, keyholder, cannabis tech, compliance, and security roles. All Massachusetts cannabis retail workers must be 21 or older. Apply at /careers.",
   },
   {
     q: "Do I have to be 21 to shop at Eddie's Flowers?",
@@ -43,7 +42,7 @@ const FAQ = [
   },
   {
     q: "Will you deliver?",
-    a: "Delivery is a post-opening goal — we plan to offer local delivery in compliance with Massachusetts CCC rules once we are operational.",
+    a: "Delivery is not currently offered.",
   },
   {
     q: "How do I get an invitation to the Grand Opening?",
@@ -115,7 +114,6 @@ export default function FAQ_Page() {
           </div>
         </section>
       </main>
-      <Footer />
     </>
   );
 }

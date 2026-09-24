@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Footer } from "@/components/Footer";
 import { LeadForm } from "@/components/LeadForm";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://www.eddiesflower.com";
@@ -55,7 +54,6 @@ export default function Wholesale() {
           </div>
         </section>
       </main>
-      <Footer />
     </>
   );
 }

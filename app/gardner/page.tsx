@@ -6,7 +6,6 @@
 // app/layout.tsx — no schema duplication.
 
 import type { Metadata } from "next";
-import { Footer } from "@/components/Footer";
 import { TownHero } from "@/components/town/TownHero";
 import { TownFAQ } from "@/components/town/TownFAQ";
 import { TownCTA } from "@/components/town/TownCTA";
@@ -45,12 +44,12 @@ const PAGE_FAQ = [
     "a": "23 Rindge State Road, Ashburnham, MA 01430. A short drive west of Gardner \u2014 about 15-20 minutes depending on traffic. Phone (978) 883-4026."
   },
   {
-    "q": "Why come to Eddie's instead of staying in Gardner?",
-    "a": "If you've found what you need closer to home, stay closer to home \u2014 we're not trying to be your every-week shop. Eddie's is for folks who want something different from the chain feel: a tight curated menu, more time per customer, and someone behind the counter who actually knows the flower. If that's what you've been looking for, the drive west is worth it."
+    "q": "What's Eddie's like?",
+    "a": "A small shop with a tight curated menu, more time per customer, and someone behind the counter who actually knows the flower. If you've found what you need closer to home, stay closer to home \u2014 we're not trying to be your every-week shop. Eddie's is about 15-20 minutes west of Gardner, at 23 Rindge State Road in Ashburnham."
   },
   {
     "q": "When does Eddie's open?",
-    "a": "We're still in buildout and don't have a confirmed opening date yet. Ask for a Grand Opening invitation on our home page and we'll send you the date and time before we announce it anywhere else."
+    "a": "We don't have a confirmed opening date yet. The building is finished and has its certificate of occupancy, and we're now at the final-inspection stage with the Cannabis Control Commission, which sets that schedule. Ask for a Grand Opening invitation on our home page and we'll send you the date and time before we announce it anywhere else."
   },
   {
     "q": "Are you local, or part of a chain?",
@@ -103,8 +102,8 @@ export default function GardnerPage() {
             </p>
 
             <div className="mt-8 space-y-6 text-lg leading-relaxed text-charcoal-black sm:text-xl">
-              <p>If you've shopped Gardner and felt the corporate-cannabis vibe — checkout-line speed, scripted recommendations, the same big brands stacked floor to ceiling — Eddie's is built around a different idea.</p>
-              <p>We're not the closest shop to you. We're a small curated dispensary a short drive west, in Ashburnham. Tight menu. Real answers when you ask questions. Time to actually look at what's on the shelf without feeling rushed.</p>
+              <p>Eddie's is about 15-20 minutes west of Gardner, at 23 Rindge State Road in Ashburnham.</p>
+              <p>We're a small curated dispensary. Tight menu. Real answers when you ask questions. Time to actually look at what's on the shelf without feeling rushed.</p>
               <p>If you're after volume or the lowest price, we're probably not your fit. If you've been looking for somewhere quieter and more deliberate, the drive west is worth it.</p>
             </div>
 
@@ -235,7 +234,6 @@ export default function GardnerPage() {
         <TownCTA townAccent="Gardner" />
       </main>
 
-      <Footer />
     </>
   );
 }

@@ -6,7 +6,7 @@
 import Link from "next/link";
 
 interface TownCTAProps {
-  /** Display name picked out in leaf-green-soft, e.g. "Winchendon" / "Rindge". */
+  /** Display name picked out in leaf-green-soft, e.g. "Winchendon" / "Gardner". */
   townAccent: string;
 }
 
@@ -36,8 +36,8 @@ export function TownCTA({ townAccent }: TownCTAProps) {
         </h2>
 
         <p className="mt-6 max-w-xl text-balance text-base text-white/70 sm:text-lg">
-          One note from us the day we open — no spam, no shares, no
-          list-selling. Ever.
+          We&apos;ll send you the opening date before we announce it
+          anywhere else. No spam, and we don&apos;t sell your details.
         </p>
 
         <Link

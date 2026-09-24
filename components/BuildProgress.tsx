@@ -123,7 +123,7 @@ function readPhotos(): Photo[] {
       // rather than shipping an empty alt on meaningful content.
       alt:
         caption ||
-        "Eddie's Flowers Dispensary under construction at 23 Rindge State Road, Ashburnham, Massachusetts",
+        "Eddie's Flowers Dispensary at 23 Rindge State Road, Ashburnham, Massachusetts",
     };
   });
 }
@@ -149,13 +149,13 @@ export function BuildProgress() {
         >
           It&apos;s a{" "}
           <span className="italic font-light text-leaf-green-deep">real place</span>,
-          and it&apos;s nearly finished.
+          and the building is finished.
         </h2>
         <p
           data-reveal
           className="mx-auto mt-4 max-w-xl text-balance text-center text-base text-charcoal-black/70"
         >
-          23 Rindge State Road, Ashburnham. Here&apos;s how it&apos;s coming along.
+          23 Rindge State Road, Ashburnham. Here&apos;s how it came together.
         </p>
 
         <figure data-reveal className="mt-12">

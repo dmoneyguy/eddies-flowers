@@ -9,12 +9,12 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 
 interface TownHeroProps {
-  /** "Winchendon · MA" or "Rindge · NH" */
+  /** "Winchendon · MA" */
   eyebrow: string;
   /** Sentence lead-in, e.g. "A quieter dispensary, " */
   straplineLead: string;
   /** Single word accented in leaf-green-soft (matches the homepage "flower"
-   *  accent pattern). E.g. "south" / "different" / "border" / "over" / "west". */
+   *  accent pattern). E.g. "south" / "different" / "over" / "west". */
   straplineGreen: string;
   /** Subhead paragraph — typically address + catchment + tone. */
   subhead: ReactNode;

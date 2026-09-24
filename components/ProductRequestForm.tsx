@@ -197,8 +197,12 @@ export function ProductRequestForm() {
       )}
 
       <p id="request-microcopy" className="text-xs text-charcoal-black/60">
-        We read every request — it shapes what we stock on day one. We&apos;ll only email you if you
-        left an address, and only about this.
+        We read every request — it shapes what we stock on day one. If you leave an email or
+        number, we&apos;ll only contact you as the boxes above allow — see our{" "}
+        <a href="/privacy" className="underline underline-offset-2 hover:text-charcoal-black">
+          privacy policy
+        </a>
+        .
       </p>
     </form>
   );
