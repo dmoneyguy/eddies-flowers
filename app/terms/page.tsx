@@ -1,6 +1,5 @@
 // Terms of Service — v1 scope. Reviewed by counsel before Part 1G publish.
 
-import { Footer } from "@/components/Footer";
 
 export const metadata = { title: "Terms of Service" };
 
@@ -92,7 +91,6 @@ export default function TermsPage() {
           </p>
         </article>
       </main>
-      <Footer />
     </>
   );
 }

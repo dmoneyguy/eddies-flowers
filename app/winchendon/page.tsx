@@ -6,7 +6,6 @@
 // app/layout.tsx — no schema duplication.
 
 import type { Metadata } from "next";
-import { Footer } from "@/components/Footer";
 import { TownHero } from "@/components/town/TownHero";
 import { TownFAQ } from "@/components/town/TownFAQ";
 import { TownCTA } from "@/components/town/TownCTA";
@@ -45,12 +44,12 @@ const PAGE_FAQ = [
     "a": "23 Rindge State Road, Ashburnham, MA 01430. About 10 minutes south of the Winchendon line, in the heart of Ashburnham. Phone (978) 883-4026."
   },
   {
-    "q": "Why come to Eddie's instead of staying in Winchendon?",
-    "a": "Honest answer: if you're looking for the biggest menu or the lowest price, we're probably not your shop \u2014 there's already a dispensary in Winchendon for that. Eddie's is the smaller, quieter option about 10 minutes south. Tight curated menu, more time per customer, real conversations about what works for you. Worth the drive if that's what you're after."
+    "q": "What's Eddie's like?",
+    "a": "A smaller, quieter shop about 10 minutes south of Winchendon, in Ashburnham. Tight curated menu, more time per customer, real conversations about what works for you. Worth the drive if that's what you're after."
   },
   {
     "q": "When does Eddie's open?",
-    "a": "We're still in buildout and don't have a confirmed opening date yet. Ask for a Grand Opening invitation on our home page and we'll send you the date and time before we announce it anywhere else."
+    "a": "We don't have a confirmed opening date yet. The building is finished and has its certificate of occupancy, and we're now at the final-inspection stage with the Cannabis Control Commission, which sets that schedule. Ask for a Grand Opening invitation on our home page and we'll send you the date and time before we announce it anywhere else."
   },
   {
     "q": "Are you local, or part of a chain?",
@@ -103,7 +102,7 @@ export default function WinchendonPage() {
             </p>
 
             <div className="mt-8 space-y-6 text-lg leading-relaxed text-charcoal-black sm:text-xl">
-              <p>We know there's already a dispensary in Winchendon. We're not trying to be a bigger version of that — we're trying to be a smaller one.</p>
+              <p>Eddie's is about 10 minutes south of Winchendon, in Ashburnham — a small shop, and we mean to keep it that way.</p>
               <p>What that means: a tighter menu, more time per customer, real conversations about what you're looking for. If you're after the loudest brands or the lowest price, we're probably not your shop. If you want someone behind the counter who actually knows the flower and isn't trying to upsell you, the drive down to Ashburnham is worth it.</p>
               <p>About 10 minutes south of the Winchendon line. Whenever you're ready.</p>
             </div>
@@ -235,7 +234,6 @@ export default function WinchendonPage() {
         <TownCTA townAccent="Winchendon" />
       </main>
 
-      <Footer />
     </>
   );
 }

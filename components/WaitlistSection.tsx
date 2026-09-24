@@ -73,7 +73,7 @@ export function WaitlistSection() {
           {[
             "You get the opening date and time before we announce it anywhere else.",
             "You're through the door on day one, ahead of the queue.",
-            "If you want it, a text the morning we open — nothing else.",
+            "If you want it, a text the morning we open.",
           ].map((promise) => (
             <li key={promise} className="flex items-start gap-3">
               <span
@@ -92,7 +92,7 @@ export function WaitlistSection() {
         </ul>
 
         <p data-reveal className="mt-6 text-xs leading-relaxed text-charcoal-black/50">
-          No spam, no shares, no list-selling. Ever. Massachusetts law doesn&apos;t
+          No spam, and we don&apos;t sell your details. Massachusetts law doesn&apos;t
           let a dispensary offer discounts, points or rewards, so we don&apos;t
           pretend to — this is early notice, and that&apos;s all it is.
         </p>

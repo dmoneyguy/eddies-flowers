@@ -80,24 +80,32 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="space-y-4 border-t border-white/10 pt-8">
+        {/* Required warnings — 935 CMR 500.105(4)(a)7 and (a)8. VERBATIM.
+            Full opacity and never smaller than 14px (text-base = 16px) so they
+            are conspicuous. Do not paraphrase, reorder, restyle into grey, or
+            shrink any of this text. */}
+        <section
+          aria-labelledby="footer-warnings"
+          className="space-y-4 border-t border-white/10 pt-8 text-base leading-relaxed text-white"
+        >
+          <p id="footer-warnings" className="text-lg font-bold text-white">
+            Please Consume Responsibly.
+          </p>
+          <ul className="list-disc space-y-1 pl-5 font-semibold text-white">
+            <li>This product may cause impairment and may be habit forming.</li>
+            <li>
+              For use only by adults 21 years of age or older. Keep out of the reach of children.
+            </li>
+            <li>There may be health risks associated with consumption of this product.</li>
+          </ul>
+          <p className="text-white">
+            This product has not been analyzed or approved by the Food and Drug Administration (FDA). There is limited information on the side effects of using this product, and there may be associated health risks. Marijuana use during pregnancy and breast-feeding may pose potential harms. It is against the law to drive or operate machinery when under the influence of this product. KEEP THIS PRODUCT AWAY FROM CHILDREN. There may be health risks associated with consumption of this product. Marijuana can impair concentration, coordination, and judgment. The impairment effects of Edibles may be delayed by two hours or more. In case of accidental ingestion, contact poison control hotline 1-800-222-1222 or 9-1-1. This product may be illegal outside of MA.
+          </p>
           <p className="font-semibold text-white">
             Eddie&apos;s Flowers — Massachusetts Licensed Adult-Use Marijuana Retailer #
-            {LICENSE_NUMBER} (Provisional). For adults 21 and older. Please consume responsibly.
+            {LICENSE_NUMBER} (Provisional).
           </p>
-          <p className="text-white/60">
-            There may be health risks associated with consumption of this product. This product
-            has not been analyzed or approved by the Food and Drug Administration (FDA). There is
-            limited information on the side effects of using this product, and there may be
-            associated health risks. Marijuana use during pregnancy and breast-feeding may pose
-            potential harms. It is against the law to drive or operate machinery when under the
-            influence of this product. Keep out of reach of children. Marijuana can impair
-            concentration, coordination, and judgment. The impairment effects of edibles may be
-            delayed by two hours or more. In case of accidental ingestion or overconsumption,
-            contact the National Poison Control Center hotline 1-800-222-1222 or call 9-1-1.
-            This product may be illegal outside of Massachusetts.
-          </p>
-        </div>
+        </section>
 
         <div className="flex flex-wrap items-center gap-x-6 gap-y-2 border-t border-white/10 pt-6">
           <Link className="inline-flex min-h-11 items-center hover:text-leaf-green focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-leaf-green" href="/faq">FAQ</Link>

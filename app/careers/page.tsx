@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Footer } from "@/components/Footer";
 import { CareersForm } from "@/components/CareersForm";
 import {
   ADDRESS_LOCALITY,
@@ -28,7 +27,7 @@ export const metadata: Metadata = {
 // This is the highest-leverage SEO on the site right now. Google Jobs and the
 // AI assistants people actually ask ("who's hiring in Ashburnham?") read
 // JobPosting; without it we are invisible to both, no matter how good the page
-// reads. Six roles, each emitted separately so each can surface on its own.
+// reads. Five roles, each emitted separately so each can surface on its own.
 //
 // HONESTY CONSTRAINTS, because this is a public representation of real jobs:
 //   - No salary is published. We have not set wage bands, and inventing one to
@@ -49,8 +48,6 @@ const ROLES = [
     desc: "Receive, count, tag and reconcile inventory in Metrc, the Massachusetts seed-to-sale tracking system, at a new adult-use dispensary in Ashburnham, MA. Careful, methodical work. Must be 21 or older and registrable as a Marijuana Establishment Agent." },
   { title: "Compliance & Administrative Support", type: ["FULL_TIME", "PART_TIME"],
     desc: "Maintain records, logs and standard operating procedures for a Massachusetts adult-use cannabis retailer in Ashburnham, MA. Suits someone organised who likes getting the paperwork exactly right. Must be 21 or older and registrable as a Marijuana Establishment Agent." },
-  { title: "Delivery Driver", type: ["PART_TIME"],
-    desc: "Post-opening role delivering cannabis orders locally under Massachusetts Cannabis Control Commission rules, from our Ashburnham, MA shop. Clean driving record required. Must be 21 or older and registrable as a Marijuana Establishment Agent." },
   { title: "Security", type: ["FULL_TIME", "PART_TIME"],
     desc: "Front-door presence and floor security at a new adult-use dispensary in Ashburnham, MA. Check identification, keep the room calm, support staff during opening and closing. Must be 21 or older and registrable as a Marijuana Establishment Agent." },
 ] as const;
@@ -118,7 +115,6 @@ export default function Careers() {
                 <li><strong>Keyholders / shift leads</strong></li>
                 <li><strong>Cannabis tech / inventory</strong></li>
                 <li><strong>Compliance &amp; admin support</strong></li>
-                <li><strong>Delivery driver</strong> (post-opening)</li>
                 <li><strong>Security</strong></li>
               </ul>
               <p>
@@ -144,7 +140,6 @@ export default function Careers() {
           </div>
         </section>
       </main>
-      <Footer />
     </>
   );
 }

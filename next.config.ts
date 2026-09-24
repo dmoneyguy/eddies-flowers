@@ -38,6 +38,15 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  async redirects() {
+    return [
+      // /rindge-nh was a landing page aimed at New Hampshire residents. It is
+      // unpublished (935 CMR 500.105(4)(a)7 and the Diversion definition):
+      // permanently redirected home, removed from the sitemap and every link.
+      { source: "/rindge-nh", destination: "/", permanent: true },
+      { source: "/rindge-nh/:path*", destination: "/", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

@@ -285,8 +285,12 @@ export function WaitlistForm() {
       )}
 
       <p id="waitlist-microcopy" className="text-xs text-charcoal-black/60">
-        By submitting you confirm you are 21 or older. We will never sell or
-        share your information.
+        By submitting you confirm you are 21 or older. We don&apos;t sell your
+        information. The boxes above say who may contact you; our{" "}
+        <a href="/privacy" className="underline underline-offset-2 hover:text-charcoal-black">
+          privacy policy
+        </a>{" "}
+        has the details.
       </p>
     </form>
   );

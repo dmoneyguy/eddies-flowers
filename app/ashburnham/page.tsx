@@ -2,8 +2,8 @@
 //
 // Town-specific landing that owns the "dispensary in Ashburnham" search
 // intent. Distinct URL, distinct schema (WebPage referencing the global
-// Store entity), distinct meta + page-scoped FAQ. Footer is global-pattern
-// (imported per-route, not inherited).
+// Store entity), distinct meta + page-scoped FAQ. The footer (with the
+// required warnings) comes from app/layout.tsx.
 //
 // Voice: Eddie's. Neighbor warmth, plain factual statements, no marketing
 // register. Reads as a destination page for an actual Ashburnham resident
@@ -12,7 +12,6 @@
 
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Footer } from "@/components/Footer";
 import {
   ADDRESS_FULL,
   STREET_ADDRESS,
@@ -62,7 +61,7 @@ const PAGE_FAQ = [
   },
   {
     q: "When does Eddie's open?",
-    a: "We're still in buildout and don't have a confirmed opening date yet. Ask for a Grand Opening invitation on our home page and we'll send you the date and time before we announce it anywhere else.",
+    a: "We don't have a confirmed opening date yet. The building is finished and has its certificate of occupancy, and we're now at the final-inspection stage with the Cannabis Control Commission, which sets that schedule. Ask for a Grand Opening invitation on our home page and we'll send you the date and time before we announce it anywhere else.",
   },
   {
     q: "Are you local, or part of a chain?",
@@ -164,7 +163,7 @@ export default function AshburnhamPage() {
               <span aria-hidden="true">→</span>
             </Link>
             <p className="mt-4 text-xs uppercase tracking-[0.2em] text-white/40">
-              No spam · One note when we open
+              No spam · The date, before we announce it
             </p>
           </div>
         </section>
@@ -189,17 +188,17 @@ export default function AshburnhamPage() {
               </p>
 
               <p>
-                Ashburnham deserves a dispensary that feels like it belongs here
-                — not a chain dropped in from Boston, not a brand trying to be
-                edgy. We&apos;re hiring locally — folks from Ashburnham and the
+                Eddie&apos;s is a couple of minutes from the center of
+                Ashburnham, and we want it to feel like it belongs here.
+                We&apos;re hiring locally — folks from Ashburnham and the
                 surrounding towns. We want to be your neighbor, not just
                 another shop on the map.
               </p>
 
               <p>
                 If you live in town, I want you to walk in feeling like a
-                neighbor. If you&apos;re driving in from Winchendon, Gardner, or
-                down from Rindge, I want you to feel the same way.
+                neighbor. If you&apos;re driving in from Winchendon, Gardner or
+                Westminster, I want you to feel the same way.
               </p>
             </div>
 
@@ -294,7 +293,7 @@ export default function AshburnhamPage() {
                 <ul className="mt-3 space-y-2 text-sm text-white/75">
                   <li>A couple minutes from the center of Ashburnham.</li>
                   <li>About 10 minutes from Winchendon.</li>
-                  <li>Around 10 minutes from the Rindge, NH border.</li>
+                  <li>About 15-20 minutes from Gardner.</li>
                 </ul>
               </div>
 
@@ -391,8 +390,8 @@ export default function AshburnhamPage() {
             </h2>
 
             <p className="mt-6 max-w-xl text-balance text-base text-white/70 sm:text-lg">
-              One note from us the day we open — no spam, no shares, no
-              list-selling. Ever.
+              We&apos;ll send you the opening date before we announce it
+              anywhere else. No spam, and we don&apos;t sell your details.
             </p>
 
             <Link
@@ -406,7 +405,6 @@ export default function AshburnhamPage() {
         </section>
       </main>
 
-      <Footer />
     </>
   );
 }

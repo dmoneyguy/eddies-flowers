@@ -6,7 +6,6 @@
 // app/layout.tsx — no schema duplication.
 
 import type { Metadata } from "next";
-import { Footer } from "@/components/Footer";
 import { TownHero } from "@/components/town/TownHero";
 import { TownFAQ } from "@/components/town/TownFAQ";
 import { TownCTA } from "@/components/town/TownCTA";
@@ -50,7 +49,7 @@ const PAGE_FAQ = [
   },
   {
     "q": "When does Eddie's open?",
-    "a": "We're still in buildout and don't have a confirmed opening date yet. Ask for a Grand Opening invitation on our home page and we'll send you the date and time before we announce it anywhere else."
+    "a": "We don't have a confirmed opening date yet. The building is finished and has its certificate of occupancy, and we're now at the final-inspection stage with the Cannabis Control Commission, which sets that schedule. Ask for a Grand Opening invitation on our home page and we'll send you the date and time before we announce it anywhere else."
   },
   {
     "q": "Are you local, or part of a chain?",
@@ -235,7 +234,6 @@ export default function WestminsterPage() {
         <TownCTA townAccent="Westminster" />
       </main>
 
-      <Footer />
     </>
   );
 }

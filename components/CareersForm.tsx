@@ -13,7 +13,6 @@ const ROLES = [
   { value: "keyholder",       label: "Keyholder / Shift Lead" },
   { value: "cannabis_tech",   label: "Cannabis Tech / Inventory" },
   { value: "compliance",      label: "Compliance & Admin" },
-  { value: "delivery",        label: "Delivery / Driver" },
   { value: "security",        label: "Security" },
   { value: "other",           label: "Something else" },
 ] as const;

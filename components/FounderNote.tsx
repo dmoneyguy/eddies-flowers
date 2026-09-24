@@ -51,7 +51,7 @@ export function FounderNote() {
             </a>{" "}
             and I&apos;ll send you the date and time before we announce it
             anywhere else, so you&apos;re among the first through the door. No spam,
-            no list-selling — just a note from me.
+            no list-selling.
           </p>
         </div>
 

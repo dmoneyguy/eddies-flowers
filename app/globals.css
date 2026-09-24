@@ -118,30 +118,6 @@ body {
 }
 
 /* ============================================================
-   Ambient leaf-drift animation in hero
-   ============================================================ */
-@keyframes leaf-drift-up {
-  0% {
-    transform: translate3d(var(--x, 0), 100vh, 0) rotate(var(--r, 0deg)) scale(var(--s, 1));
-    opacity: 0;
-  }
-  10% { opacity: var(--o, 0.18); }
-  90% { opacity: var(--o, 0.18); }
-  100% {
-    transform: translate3d(calc(var(--x, 0) + var(--dx, 60px)), -120vh, 0) rotate(calc(var(--r, 0deg) + 120deg)) scale(var(--s, 1));
-    opacity: 0;
-  }
-}
-
-.leaf-drift {
-  position: absolute;
-  pointer-events: none;
-  will-change: transform, opacity;
-  animation: leaf-drift-up var(--d, 22s) linear infinite;
-  animation-delay: var(--delay, 0s);
-}
-
-/* ============================================================
    Glow + accents
    ============================================================ */
 .glow-leaf {
@@ -239,7 +215,7 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .leaf-drift, .marquee-track { display: none !important; }
+  .marquee-track { display: none !important; }
   [data-reveal] { opacity: 1; transform: none; }
 }
 
