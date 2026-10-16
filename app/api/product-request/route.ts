@@ -14,6 +14,7 @@ import { db } from "@/lib/db";
 import { eddiesFlowersLeads } from "@/lib/db/schema";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { resend, FROM, NOTIFICATION_EMAIL } from "@/lib/email/resend";
+import { anyLanded, NOT_SAVED_PREFIX } from "@/lib/fallback";
 
 export const runtime = "nodejs";
 
@@ -94,6 +95,7 @@ export async function POST(req: NextRequest) {
     .join(" · ");
 
   const userAgent = req.headers.get("user-agent");
+  let saved = true;
   try {
     await db.insert(eddiesFlowersLeads).values({
       source: "product_request",
@@ -124,19 +126,17 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (err) {
+    // Keep going: the notification (and the CRM, when there is an email) still capture it (lib/fallback.ts).
+    saved = false;
     // eslint-disable-next-line no-console
-    console.error("[product-request] DB insert failed:", err);
-    return NextResponse.json(
-      { ok: false, error: "Something went wrong on our end. Please try again." },
-      { status: 500 },
-    );
+    console.error("[product-request] DB insert failed — falling back to CRM + email:", err);
   }
 
   const sends: Promise<unknown>[] = [
     resend.emails.send({
       from: FROM,
       to: NOTIFICATION_EMAIL,
-      subject: `Product request: ${product.trim().slice(0, 60)}`,
+      subject: `${saved ? "" : NOT_SAVED_PREFIX}Product request: ${product.trim().slice(0, 60)}`,
       text: [
         `New product/brand request for Eddie's Flowers.`,
         ``,
@@ -193,14 +193,20 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  await Promise.allSettled(sends).then((results) => {
-    for (const r of results) {
-      if (r.status === "rejected") {
-        // eslint-disable-next-line no-console
-        console.error("[product-request] email send failed:", r.reason);
-      }
+  const results = await Promise.allSettled(sends);
+  for (const r of results) {
+    if (r.status === "rejected") {
+      // eslint-disable-next-line no-console
+      console.error("[product-request] email send failed:", r.reason);
     }
-  });
+  }
+  // Without the DB row, the team notification (index 0) or the CRM save (index 1, when present) must have landed.
+  if (!saved && !anyLanded(results.slice(0, 2))) {
+    return NextResponse.json(
+      { ok: false, error: "Something went wrong on our end. Please try again." },
+      { status: 500 },
+    );
+  }
 
   return NextResponse.json({ ok: true });
 }

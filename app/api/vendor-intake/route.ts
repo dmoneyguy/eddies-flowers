@@ -12,6 +12,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { resend, FROM, NOTIFICATION_RECIPIENTS } from "@/lib/email/resend";
+import { saveToCrm, anyLanded, NOT_SAVED_PREFIX } from "@/lib/fallback";
 import {
   FORMS,
   EFFECTS,
@@ -176,6 +177,7 @@ export async function POST(req: NextRequest) {
   const arr = (xs: readonly string[]) => sql`ARRAY(SELECT jsonb_array_elements_text(${JSON.stringify(xs)}::jsonb))::text[]`;
 
   let intakeId: string | null = null;
+  let saved = true;
   try {
     const result = await db.execute(sql`
       WITH i AS (
@@ -216,13 +218,13 @@ export async function POST(req: NextRequest) {
     `);
     intakeId = (rowsOf(result)[0]?.id as string | undefined) ?? null;
   } catch (err) {
+    // Keep going: the CRM + the notification (with the full payload to replay) still capture it (lib/fallback.ts).
+    saved = false;
     // eslint-disable-next-line no-console
-    console.error("[vendor-intake] DB insert failed:", err);
-    return NextResponse.json(
-      { ok: false, error: "Something went wrong on our end. Please try again." },
-      { status: 500 },
-    );
+    console.error("[vendor-intake] DB insert failed — falling back to CRM + email:", err);
   }
+  // Everything needed to replay this pitch into the desk tables once the site's DB write works again.
+  const replayJson = JSON.stringify({ ...d, products, categories, received_at: new Date().toISOString() });
 
   const productLines = products.map((p, i) => {
     const size = p.size_label || (p.thc_mg !== null ? `${p.thc_mg}mg` : p.size_grams !== null ? `${p.size_grams}g` : "");
@@ -255,7 +257,7 @@ export async function POST(req: NextRequest) {
       from: FROM,
       to: NOTIFICATION_RECIPIENTS,
       replyTo: d.contact_email,
-      subject: `[Vendor pitch] ${d.company_name} — ${products.length} SKU${products.length === 1 ? "" : "s"}`,
+      subject: `${saved ? "" : NOT_SAVED_PREFIX}[Vendor pitch] ${d.company_name} — ${products.length} SKU${products.length === 1 ? "" : "s"}`,
       text: [
         `New vendor pitch from eddiesflower.com/wholesale.`,
         ``,
@@ -277,22 +279,43 @@ export async function POST(req: NextRequest) {
         ...(productLines.length ? productLines : ["  (none listed — ask for their menu with wholesale prices)"]),
         ``,
         d.notes ? `Notes: ${d.notes}` : ``,
-        `Priced against every shelf within 20 miles on the buying desk:`,
-        `${DESK_URL}${intakeId ? `#${intakeId}` : ""}`,
+        saved
+          ? `Priced against every shelf within 20 miles on the buying desk:`
+          : `NOT on the buying desk yet — the site could not write to the database. Replay JSON:`,
+        saved ? `${DESK_URL}${intakeId ? `#${intakeId}` : ""}` : replayJson,
       ]
         .filter((l, i, a) => !(l === "" && a[i - 1] === ""))
         .join("\n"),
     }),
   ];
 
-  await Promise.allSettled(sendOps).then((results) => {
-    for (const r of results) {
-      if (r.status === "rejected") {
-        // eslint-disable-next-line no-console
-        console.error("[vendor-intake] email send failed:", r.reason);
-      }
-    }
-  });
+  if (!saved) {
+    sendOps.push(
+      saveToCrm({
+        name: d.contact_name,
+        email: d.contact_email,
+        phone: d.contact_phone,
+        company: d.company_name,
+        message: `Vendor pitch (not yet on the buying desk): ${products.length} SKUs. ${replayJson}`,
+        formTag: "vendor-intake",
+      }),
+    );
+  }
 
-  return NextResponse.json({ ok: true, id: intakeId });
+  const results = await Promise.allSettled(sendOps);
+  for (const r of results) {
+    if (r.status === "rejected") {
+      // eslint-disable-next-line no-console
+      console.error("[vendor-intake] side effect failed:", r.reason);
+    }
+  }
+  // Without the DB row, the team notification (index 1) or the CRM save (index 2) must have landed.
+  if (!saved && !anyLanded(results.slice(1))) {
+    return NextResponse.json(
+      { ok: false, error: "Something went wrong on our end. Please try again." },
+      { status: 500 },
+    );
+  }
+
+  return NextResponse.json({ ok: true, id: intakeId, saved });
 }
