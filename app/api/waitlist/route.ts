@@ -31,6 +31,7 @@ import { db } from "@/lib/db";
 import { eddiesFlowersLeads } from "@/lib/db/schema";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { resend, FROM, NOTIFICATION_RECIPIENTS } from "@/lib/email/resend";
+import { anyLanded, NOT_SAVED_PREFIX } from "@/lib/fallback";
 
 export const runtime = "nodejs";
 
@@ -86,7 +87,7 @@ async function forwardToCrm(input: {
   phone: string | null;
   marketingOptIn: boolean;
   smsOptIn: boolean;
-}): Promise<void> {
+}): Promise<boolean> {
   try {
     // Overridable so preview/test runs can point at a sink instead of the
     // live CRM. Defaults to production — an unset env var must never silently
@@ -94,7 +95,7 @@ async function forwardToCrm(input: {
     const crmUrl =
       process.env.LEGACY_OS_CRM_URL ||
       "https://legacy-os.thelegacyops.com/api/v1/contacts";
-    await fetch(crmUrl, {
+    const res = await fetch(crmUrl, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -109,8 +110,10 @@ async function forwardToCrm(input: {
         consent_version: CONSENT_VERSION,
       }),
     });
+    return res.ok;
   } catch {
     // best-effort — never block the submission
+    return false;
   }
 }
 
@@ -163,6 +166,7 @@ export async function POST(req: NextRequest) {
   }
 
   const userAgent = req.headers.get("user-agent");
+  let saved = true;
   try {
     await db.insert(eddiesFlowersLeads).values({
       source: "launch_waitlist",
@@ -185,12 +189,10 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (err) {
+    // Keep going: forwardToCrm + the notification below still capture it (lib/fallback.ts).
+    saved = false;
     // eslint-disable-next-line no-console
-    console.error("[waitlist] DB insert failed:", err);
-    return NextResponse.json(
-      { ok: false, error: "Something went wrong on our end. Please try again." },
-      { status: 500 },
-    );
+    console.error("[waitlist] DB insert failed — falling back to CRM + email:", err);
   }
 
   // Outbound side-effects — best-effort, never block the response.
@@ -236,7 +238,7 @@ export async function POST(req: NextRequest) {
     resend.emails.send({
       from: FROM,
       to: NOTIFICATION_RECIPIENTS,
-      subject: `New Grand Opening invitation: ${emailNormalized || phoneNormalized || "(unknown)"}`,
+      subject: `${saved ? "" : NOT_SAVED_PREFIX}New Grand Opening invitation: ${emailNormalized || phoneNormalized || "(unknown)"}`,
       text: [
         `New Grand Opening invitation request for Eddie's Flowers.`,
         ``,
@@ -253,14 +255,20 @@ export async function POST(req: NextRequest) {
     }),
   );
 
-  await Promise.allSettled(sendOps).then((results) => {
-    for (const r of results) {
-      if (r.status === "rejected") {
-        // eslint-disable-next-line no-console
-        console.error("[waitlist] side-effect failed:", r.reason);
-      }
+  const results = await Promise.allSettled(sendOps);
+  for (const r of results) {
+    if (r.status === "rejected") {
+      // eslint-disable-next-line no-console
+      console.error("[waitlist] side-effect failed:", r.reason);
     }
-  });
+  }
+  // Without the DB row, the CRM forward (index 0) or the team notification (last) must have landed.
+  if (!saved && !anyLanded([results[0], results[results.length - 1]])) {
+    return NextResponse.json(
+      { ok: false, error: "Something went wrong on our end. Please try again." },
+      { status: 500 },
+    );
+  }
 
   return NextResponse.json({ ok: true });
 }

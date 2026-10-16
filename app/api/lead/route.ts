@@ -7,6 +7,7 @@ import { db } from "@/lib/db";
 import { eddiesFlowersLeads } from "@/lib/db/schema";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { resend, FROM, NOTIFICATION_RECIPIENTS } from "@/lib/email/resend";
+import { saveToCrm, anyLanded, NOT_SAVED_PREFIX } from "@/lib/fallback";
 
 export const runtime = "nodejs";
 
@@ -72,6 +73,7 @@ export async function POST(req: NextRequest) {
   }
 
   const userAgent = req.headers.get("user-agent");
+  let saved = true;
   try {
     await db.insert(eddiesFlowersLeads).values({
       source,
@@ -91,11 +93,23 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (err) {
+    // Keep going: the CRM + notification below still capture it (lib/fallback.ts).
+    saved = false;
     // eslint-disable-next-line no-console
-    console.error("[lead] DB insert failed:", err);
-    return NextResponse.json(
-      { ok: false, error: "Something went wrong on our end. Please try again." },
-      { status: 500 },
+    console.error("[lead] DB insert failed — falling back to CRM + email:", err);
+  }
+
+  const internalOps: Promise<unknown>[] = [];
+  if (!saved) {
+    internalOps.push(
+      saveToCrm({
+        name,
+        email,
+        phone: phoneNormalized || null,
+        company: org || null,
+        message: [message, extras ? `Extras: ${JSON.stringify(extras)}` : ""].filter(Boolean).join("\n\n"),
+        formTag: source,
+      }),
     );
   }
 
@@ -120,7 +134,7 @@ export async function POST(req: NextRequest) {
     resend.emails.send({
       from: FROM,
       to: NOTIFICATION_RECIPIENTS,
-      subject: `[${SOURCE_LABELS[source]}] ${name} <${email}>`,
+      subject: `${saved ? "" : NOT_SAVED_PREFIX}[${SOURCE_LABELS[source]}] ${name} <${email}>`,
       text: [
         `New ${SOURCE_LABELS[source].toLowerCase()} from the Eddie's Flowers site.`,
         ``,
@@ -143,14 +157,20 @@ export async function POST(req: NextRequest) {
     }),
   ];
 
-  await Promise.allSettled(sendOps).then((results) => {
-    for (const r of results) {
-      if (r.status === "rejected") {
-        // eslint-disable-next-line no-console
-        console.error("[lead] email send failed:", r.reason);
-      }
+  const results = await Promise.allSettled([...sendOps, ...internalOps]);
+  for (const r of results) {
+    if (r.status === "rejected") {
+      // eslint-disable-next-line no-console
+      console.error("[lead] side effect failed:", r.reason);
     }
-  });
+  }
+  // Without the DB row, the notification (index 1) or the CRM save must have landed, or the lead is lost: say so.
+  if (!saved && !anyLanded([results[1], ...results.slice(sendOps.length)])) {
+    return NextResponse.json(
+      { ok: false, error: "Something went wrong on our end. Please try again." },
+      { status: 500 },
+    );
+  }
 
   return NextResponse.json({ ok: true });
 }
