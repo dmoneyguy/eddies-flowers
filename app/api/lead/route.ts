@@ -1,10 +1,10 @@
 // POST /api/lead — handles careers, wholesale, and press inquiries.
-// Same defensive shape as /api/waitlist: validate, rate-limit, insert, notify.
+// Same defensive shape as /api/waitlist: validate, rate-limit, save through Legacy OS
+// (POST /api/v1/eddies-forms/lead → control_plane.eddies_flowers_leads; no database credential here), notify.
 
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
-import { db } from "@/lib/db";
-import { eddiesFlowersLeads } from "@/lib/db/schema";
+import { saveToLegacyOs, visitorIp, visitorUserAgent } from "@/lib/legacy-os";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { resend, FROM, NOTIFICATION_RECIPIENTS } from "@/lib/email/resend";
 import { saveToCrm, anyLanded, NOT_SAVED_PREFIX } from "@/lib/fallback";
@@ -73,30 +73,26 @@ export async function POST(req: NextRequest) {
   }
 
   const userAgent = req.headers.get("user-agent");
-  let saved = true;
-  try {
-    await db.insert(eddiesFlowersLeads).values({
-      source,
-      email,
-      phone: phoneNormalized || null,
-      name,
-      message: message || null,
-      consentedToMarketing: false,
-      ageGateAttested: false,
-      ipAddress: ip === "unknown" ? null : ip,
-      userAgent,
-      status: "new",
-      metadata: {
-        org: org || null,
-        path: req.headers.get("referer") || null,
-        ...(extras && typeof extras === "object" ? extras : {}),
-      },
-    });
-  } catch (err) {
+  const { saved } = await saveToLegacyOs("lead", {
+    source,
+    email,
+    phone: phoneNormalized || null,
+    name,
+    message: message || null,
+    consented_to_marketing: false,
+    age_gate_attested: false,
+    ip_address: visitorIp(ip),
+    user_agent: visitorUserAgent(userAgent),
+    metadata: {
+      org: org || null,
+      path: req.headers.get("referer") || null,
+      ...(extras && typeof extras === "object" ? extras : {}),
+    },
+  });
+  if (!saved) {
     // Keep going: the CRM + notification below still capture it (lib/fallback.ts).
-    saved = false;
     // eslint-disable-next-line no-console
-    console.error("[lead] DB insert failed — falling back to CRM + email:", err);
+    console.error("[lead] Legacy OS save failed — falling back to CRM + email");
   }
 
   const internalOps: Promise<unknown>[] = [];

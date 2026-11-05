@@ -1,13 +1,13 @@
 // POST /api/age-gate — records an age-attestation in
-// control_plane.eddies_flowers_age_gate_attestations. Idempotent best-effort:
-// duplicate tokens are unique-constrained at the DB level (per migration 227);
-// if the same token comes through twice we swallow the conflict silently
-// rather than 4xx-ing the user.
+// control_plane.eddies_flowers_age_gate_attestations, through Legacy OS
+// (POST /api/v1/eddies-forms/age-gate; this site holds no database credential,
+// lib/legacy-os.ts). Best-effort: localStorage is the source of truth for the
+// visitor, so a failed save is logged and never blocks them. A repeat token is
+// stored again (migration 227 indexes session_token but does not make it unique).
 
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
-import { db } from "@/lib/db";
-import { eddiesFlowersAgeGateAttestations } from "@/lib/db/schema";
+import { saveToLegacyOs, visitorIp, visitorUserAgent } from "@/lib/legacy-os";
 
 export const runtime = "nodejs";
 
@@ -40,20 +40,17 @@ export async function POST(req: NextRequest) {
   const ip = extractIp(req);
   const userAgent = req.headers.get("user-agent");
 
-  try {
-    await db.insert(eddiesFlowersAgeGateAttestations).values({
-      sessionToken,
-      attestedAge21OrOver,
-      ipAddress: ip === "unknown" ? null : ip,
-      userAgent,
-      expiresAt: new Date(expiresAt),
-    });
-  } catch (err) {
-    // Duplicate session_token (unique constraint) is harmless — same user
-    // hit the gate again in the same session. Log other failures but never
-    // block.
+  const { saved } = await saveToLegacyOs("age-gate", {
+    session_token: sessionToken,
+    attested_age_21_or_over: attestedAge21OrOver,
+    expires_at: expiresAt,
+    ip_address: visitorIp(ip),
+    user_agent: visitorUserAgent(userAgent),
+  });
+  if (!saved) {
+    // Never block the visitor; the failure is in the logs (lib/legacy-os.ts logs the status).
     // eslint-disable-next-line no-console
-    console.warn("[age-gate] insert failed (likely duplicate):", err);
+    console.warn("[age-gate] attestation not saved to Legacy OS");
   }
 
   return NextResponse.json({ ok: true });

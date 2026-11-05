@@ -4,14 +4,14 @@
 // Flow:
 //   1. Validate payload (Zod): product required, brand/category/email optional, honeypot empty
 //   2. Rate-limit per source IP (5/hour, in-memory)
-//   3. INSERT row into control_plane.eddies_flowers_leads (source='product_request')
+//   3. Save the row through Legacy OS (POST /api/v1/eddies-forms/product-request → control_plane.eddies_flowers_leads,
+//      source='product_request'); this site holds no database credential (lib/legacy-os.ts)
 //   4. Fire internal notification to NOTIFICATION_EMAIL (Resend); ack the sender if they left an email
 //   5. Return { ok: true }
 
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
-import { db } from "@/lib/db";
-import { eddiesFlowersLeads } from "@/lib/db/schema";
+import { saveToLegacyOs, visitorIp, visitorUserAgent } from "@/lib/legacy-os";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { resend, FROM, NOTIFICATION_EMAIL } from "@/lib/email/resend";
 import { anyLanded, NOT_SAVED_PREFIX } from "@/lib/fallback";
@@ -95,41 +95,36 @@ export async function POST(req: NextRequest) {
     .join(" · ");
 
   const userAgent = req.headers.get("user-agent");
-  let saved = true;
-  try {
-    await db.insert(eddiesFlowersLeads).values({
-      source: "product_request",
-      email,
-      phone,
-      name: name?.trim() || null,
-      message: requestSummary,
-      consentedToMarketing: Boolean(email) && marketingOptIn,
-      ageGateAttested: false,
-      ipAddress: ip === "unknown" ? null : ip,
-      userAgent,
-      status: "new",
-      metadata: {
-        product: product.trim(),
-        brand: brand?.trim() || null,
-        category: category?.trim() || null,
-        path: req.headers.get("referer") || null,
-        // Consent recorded on the row itself, not only forwarded to the CRM.
-        // The leads table is the record we can produce if anyone ever asks
-        // what this person agreed to.
-        marketing_opt_in: marketingOptIn,
-        sms_opt_in: parsed.data.sms_opt_in === true,
-        consent_text: CONSENT_TEXT,
-        sms_consent_text:
-          parsed.data.sms_opt_in === true ? SMS_CONSENT_TEXT : null,
-        consent_version: CONSENT_VERSION,
-        consent_captured_at: new Date().toISOString(),
-      },
-    });
-  } catch (err) {
+  const { saved } = await saveToLegacyOs("product-request", {
+    email,
+    phone,
+    name: name?.trim() || null,
+    message: requestSummary,
+    consented_to_marketing: Boolean(email) && marketingOptIn,
+    age_gate_attested: false,
+    ip_address: visitorIp(ip),
+    user_agent: visitorUserAgent(userAgent),
+    metadata: {
+      product: product.trim(),
+      brand: brand?.trim() || null,
+      category: category?.trim() || null,
+      path: req.headers.get("referer") || null,
+      // Consent recorded on the row itself, not only forwarded to the CRM.
+      // The leads table is the record we can produce if anyone ever asks
+      // what this person agreed to.
+      marketing_opt_in: marketingOptIn,
+      sms_opt_in: parsed.data.sms_opt_in === true,
+      consent_text: CONSENT_TEXT,
+      sms_consent_text:
+        parsed.data.sms_opt_in === true ? SMS_CONSENT_TEXT : null,
+      consent_version: CONSENT_VERSION,
+      consent_captured_at: new Date().toISOString(),
+    },
+  });
+  if (!saved) {
     // Keep going: the notification (and the CRM, when there is an email) still capture it (lib/fallback.ts).
-    saved = false;
     // eslint-disable-next-line no-console
-    console.error("[product-request] DB insert failed — falling back to CRM + email:", err);
+    console.error("[product-request] Legacy OS save failed — falling back to CRM + email");
   }
 
   const sends: Promise<unknown>[] = [
