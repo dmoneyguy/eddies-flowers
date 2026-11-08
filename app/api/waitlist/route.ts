@@ -3,7 +3,8 @@
 // Flow:
 //   1. Validate payload (Zod): email and/or phone, optional name, honeypot empty
 //   2. Rate-limit per source IP (5/hour, in-memory)
-//   3. INSERT row into control_plane.eddies_flowers_leads (source='launch_waitlist')
+//   3. Save the row through Legacy OS (POST /api/v1/eddies-forms/waitlist → control_plane.eddies_flowers_leads,
+//      source='launch_waitlist'); this site holds no database credential (lib/legacy-os.ts)
 //   4. Forward the contact + consent to the Legacy OS CRM (best-effort)
 //   5. Fire acknowledgment email (only if email present + Resend configured)
 //   6. Fire internal notification email
@@ -22,13 +23,12 @@
 // marketing. Downstream systems key on metadata.sms_opt_in, not on the
 // presence of a phone number.
 //
-// Email send failures do NOT roll back the DB insert — the lead is captured
+// Email send failures do NOT roll back the saved row — the lead is captured
 // either way. Resend failures are logged but invisible to the user.
 
 import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
-import { db } from "@/lib/db";
-import { eddiesFlowersLeads } from "@/lib/db/schema";
+import { saveToLegacyOs, visitorIp, visitorUserAgent } from "@/lib/legacy-os";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { resend, FROM, NOTIFICATION_RECIPIENTS } from "@/lib/email/resend";
 import { anyLanded, NOT_SAVED_PREFIX } from "@/lib/fallback";
@@ -166,33 +166,28 @@ export async function POST(req: NextRequest) {
   }
 
   const userAgent = req.headers.get("user-agent");
-  let saved = true;
-  try {
-    await db.insert(eddiesFlowersLeads).values({
-      source: "launch_waitlist",
-      email: emailNormalized || null,
-      phone: phoneNormalized || null,
-      name: name || null,
-      consentedToMarketing: marketingOptIn,
-      ageGateAttested: false,
-      ipAddress: ip === "unknown" ? null : ip,
-      userAgent,
-      status: "new",
-      metadata: {
-        path: req.headers.get("referer") || null,
-        marketing_opt_in: marketingOptIn,
-        sms_opt_in: smsOptIn,
-        consent_text: CONSENT_TEXT,
-        sms_consent_text: smsOptIn ? SMS_CONSENT_TEXT : null,
-        consent_version: CONSENT_VERSION,
-        consent_captured_at: new Date().toISOString(),
-      },
-    });
-  } catch (err) {
+  const { saved } = await saveToLegacyOs("waitlist", {
+    email: emailNormalized || null,
+    phone: phoneNormalized || null,
+    name: name || null,
+    consented_to_marketing: marketingOptIn,
+    age_gate_attested: false,
+    ip_address: visitorIp(ip),
+    user_agent: visitorUserAgent(userAgent),
+    metadata: {
+      path: req.headers.get("referer") || null,
+      marketing_opt_in: marketingOptIn,
+      sms_opt_in: smsOptIn,
+      consent_text: CONSENT_TEXT,
+      sms_consent_text: smsOptIn ? SMS_CONSENT_TEXT : null,
+      consent_version: CONSENT_VERSION,
+      consent_captured_at: new Date().toISOString(),
+    },
+  });
+  if (!saved) {
     // Keep going: forwardToCrm + the notification below still capture it (lib/fallback.ts).
-    saved = false;
     // eslint-disable-next-line no-console
-    console.error("[waitlist] DB insert failed — falling back to CRM + email:", err);
+    console.error("[waitlist] Legacy OS save failed — falling back to CRM + email");
   }
 
   // Outbound side-effects — best-effort, never block the response.

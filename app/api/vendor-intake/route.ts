@@ -1,15 +1,15 @@
 // POST /api/vendor-intake — vendor pitches for opening-day shelf (the /wholesale form).
 //
-// Writes one row to control_plane.eddies_vendor_intakes and one row per SKU to control_plane.eddies_vendor_products
-// (migration 758 in legacy-ops-control-plane) in a single statement, so a pitch never lands without its products.
-// The Legacy OS buying desk reads these rows and prices every SKU against the shelves within 20 miles.
-// Same defensive shape as /api/lead: honeypot, validate, rate-limit, insert, then acknowledge + notify.
+// Saves one row to control_plane.eddies_vendor_intakes and one row per SKU to control_plane.eddies_vendor_products
+// (migration 758 in legacy-ops-control-plane) through Legacy OS (POST /api/v1/eddies-forms/vendor-intake), which
+// writes both in a single statement, so a pitch never lands without its products. This site holds no database
+// credential (lib/legacy-os.ts). The Legacy OS buying desk reads these rows and prices every SKU against the shelves
+// within 20 miles. Same defensive shape as /api/lead: honeypot, validate, rate-limit, save, then acknowledge + notify.
 // Unknown stays null: a blank budget is "not stated", never $0.
 
 import { NextResponse, type NextRequest } from "next/server";
-import { sql } from "drizzle-orm";
 import { z } from "zod";
-import { db } from "@/lib/db";
+import { saveToLegacyOs, visitorIp, visitorUserAgent } from "@/lib/legacy-os";
 import { checkRateLimit } from "@/lib/rate-limit";
 import { resend, FROM, NOTIFICATION_RECIPIENTS } from "@/lib/email/resend";
 import { saveToCrm, anyLanded, NOT_SAVED_PREFIX } from "@/lib/fallback";
@@ -128,11 +128,8 @@ function extractIp(req: NextRequest): string {
   return req.headers.get("x-real-ip") || "unknown";
 }
 
-function rowsOf(result: unknown): Array<Record<string, unknown>> {
-  if (Array.isArray(result)) return result as Array<Record<string, unknown>>;
-  const rows = (result as { rows?: unknown } | null)?.rows;
-  return Array.isArray(rows) ? (rows as Array<Record<string, unknown>>) : [];
-}
+/** migration 758: eddies_vendor_products.brand is 1–120 characters. */
+const PRODUCT_BRAND_MAX = 120;
 
 const money = (n: number | null) => (n === null ? "not stated" : `$${n.toLocaleString("en-US")}`);
 
@@ -170,60 +167,67 @@ export async function POST(req: NextRequest) {
 
   const products = d.products.map((p) => ({
     ...p,
-    brand: p.brand ?? d.brand_names[0] ?? d.company_name,
+    brand: (p.brand ?? d.brand_names[0] ?? d.company_name).slice(0, PRODUCT_BRAND_MAX),
   }));
   const categories = Array.from(new Set([...d.categories, ...products.map((p) => p.form)]));
   const userAgent = req.headers.get("user-agent");
-  const arr = (xs: readonly string[]) => sql`ARRAY(SELECT jsonb_array_elements_text(${JSON.stringify(xs)}::jsonb))::text[]`;
 
-  let intakeId: string | null = null;
-  let saved = true;
-  try {
-    const result = await db.execute(sql`
-      WITH i AS (
-        INSERT INTO control_plane.eddies_vendor_intakes (
-          source, company_name, brand_names, licence_numbers, licence_types, social_equity_tags,
-          contact_name, contact_title, contact_email, contact_phone, website, menu_url, categories,
-          reciprocal_interest, reciprocal_options, reciprocal_notes,
-          marketing_support, launch_budget_usd, monthly_budget_usd, launch_discount_pct, marketing_notes,
-          payment_terms, moq_notes, delivery_notes, samples_available, open_house_plan, notes,
-          ip_address, user_agent, metadata
-        ) VALUES (
-          'website', ${d.company_name}, ${arr(d.brand_names)}, ${arr(d.licence_numbers)}, ${arr(d.licence_types)},
-          ${arr(d.social_equity_tags)}, ${d.contact_name}, ${d.contact_title}, ${d.contact_email}, ${d.contact_phone},
-          ${d.website}, ${d.menu_url}, ${arr(categories)},
-          ${d.reciprocal_interest ?? null}, ${arr(d.reciprocal_options)}, ${d.reciprocal_notes},
-          ${arr(d.marketing_support)}, ${d.launch_budget_usd}, ${d.monthly_budget_usd}, ${d.launch_discount_pct},
-          ${d.marketing_notes}, ${d.payment_terms}, ${d.moq_notes}, ${d.delivery_notes}, ${d.samples_available ?? null},
-          ${d.open_house_plan ?? null}, ${d.notes}, ${ip === "unknown" ? null : ip}::inet, ${userAgent},
-          ${JSON.stringify({ path: req.headers.get("referer") || null, form_version: 1 })}::jsonb
-        )
-        RETURNING id
-      ), p AS (
-        INSERT INTO control_plane.eddies_vendor_products (
-          intake_id, brand, product_name, form, size_label, size_grams, thc_mg, thc_pct, cbd_pct, strain_type,
-          effects, wholesale_price, suggested_retail, case_pack, notes
-        )
-        SELECT i.id, x.brand, x.product_name, x.form, x.size_label, x.size_grams, x.thc_mg, x.thc_pct, x.cbd_pct,
-               x.strain_type, ARRAY(SELECT jsonb_array_elements_text(COALESCE(x.effects, '[]'::jsonb)))::text[],
-               x.wholesale_price, x.suggested_retail, x.case_pack, x.notes
-          FROM i, jsonb_to_recordset(${JSON.stringify(products)}::jsonb) AS x(
-            brand text, product_name text, form text, size_label text, size_grams numeric, thc_mg numeric,
-            thc_pct numeric, cbd_pct numeric, strain_type text, effects jsonb, wholesale_price numeric,
-            suggested_retail numeric, case_pack integer, notes text
-          )
-        RETURNING 1
-      )
-      SELECT (SELECT id::text FROM i) AS id, (SELECT count(*) FROM p)::int AS products
-    `);
-    intakeId = (rowsOf(result)[0]?.id as string | undefined) ?? null;
-  } catch (err) {
+  // Named field by field (not a spread of `d`) so the honeypot and anything else the form adds later never travel.
+  const result = await saveToLegacyOs("vendor-intake", {
+    company_name: d.company_name,
+    brand_names: d.brand_names,
+    licence_numbers: d.licence_numbers,
+    licence_types: d.licence_types,
+    social_equity_tags: d.social_equity_tags,
+    contact_name: d.contact_name,
+    contact_title: d.contact_title,
+    contact_email: d.contact_email,
+    contact_phone: d.contact_phone,
+    website: d.website,
+    menu_url: d.menu_url,
+    categories,
+    reciprocal_interest: d.reciprocal_interest ?? null,
+    reciprocal_options: d.reciprocal_options,
+    reciprocal_notes: d.reciprocal_notes,
+    marketing_support: d.marketing_support,
+    launch_budget_usd: d.launch_budget_usd,
+    monthly_budget_usd: d.monthly_budget_usd,
+    launch_discount_pct: d.launch_discount_pct,
+    marketing_notes: d.marketing_notes,
+    payment_terms: d.payment_terms,
+    moq_notes: d.moq_notes,
+    delivery_notes: d.delivery_notes,
+    samples_available: d.samples_available ?? null,
+    open_house_plan: d.open_house_plan ?? null,
+    notes: d.notes,
+    products: products.map((p) => ({
+      brand: p.brand,
+      product_name: p.product_name,
+      form: p.form,
+      size_label: p.size_label,
+      size_grams: p.size_grams,
+      thc_mg: p.thc_mg,
+      thc_pct: p.thc_pct,
+      cbd_pct: p.cbd_pct,
+      strain_type: p.strain_type ?? null,
+      effects: p.effects,
+      wholesale_price: p.wholesale_price,
+      suggested_retail: p.suggested_retail,
+      case_pack: p.case_pack,
+      notes: p.notes,
+    })),
+    ip_address: visitorIp(ip),
+    user_agent: visitorUserAgent(userAgent),
+    metadata: { path: req.headers.get("referer") || null, form_version: 1 },
+  });
+  const saved = result.saved;
+  const intakeId = result.saved ? result.id : null;
+  if (!saved) {
     // Keep going: the CRM + the notification (with the full payload to replay) still capture it (lib/fallback.ts).
-    saved = false;
     // eslint-disable-next-line no-console
-    console.error("[vendor-intake] DB insert failed — falling back to CRM + email:", err);
+    console.error("[vendor-intake] Legacy OS save failed — falling back to CRM + email");
   }
-  // Everything needed to replay this pitch into the desk tables once the site's DB write works again.
+  // Everything needed to replay this pitch into the desk tables when the Legacy OS write did not land.
   const replayJson = JSON.stringify({ ...d, products, categories, received_at: new Date().toISOString() });
 
   const productLines = products.map((p, i) => {
@@ -281,7 +285,7 @@ export async function POST(req: NextRequest) {
         d.notes ? `Notes: ${d.notes}` : ``,
         saved
           ? `Priced against every shelf within 20 miles on the buying desk:`
-          : `NOT on the buying desk yet — the site could not write to the database. Replay JSON:`,
+          : `NOT on the buying desk yet — the Legacy OS form intake did not accept the write. Replay JSON:`,
         saved ? `${DESK_URL}${intakeId ? `#${intakeId}` : ""}` : replayJson,
       ]
         .filter((l, i, a) => !(l === "" && a[i - 1] === ""))

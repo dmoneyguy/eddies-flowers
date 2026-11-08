@@ -6,11 +6,15 @@
 // Each form route now keeps going when the insert fails: it saves the submission to the Legacy OS CRM (public contacts
 // intake, no credential needed), sends the buying/ops notification marked NOT SAVED with everything needed to replay
 // it, and only answers 500 if neither of those landed.
+//
+// 2026-11-05: the site no longer writes to the database at all. The insert is now a call to the Legacy OS form intake
+// (lib/legacy-os.ts). This fallback is unchanged and now covers that call failing.
 
 export const CRM_CONTACTS_URL =
   process.env.LEGACY_OS_CRM_URL || "https://legacy-os.thelegacyops.com/api/v1/contacts";
 
-export const NOT_SAVED_PREFIX = "[NOT SAVED TO DB — site DB credential] ";
+// Keeps the "[NOT SAVED TO DB" opening so existing inbox searches and rules still match.
+export const NOT_SAVED_PREFIX = "[NOT SAVED TO DB — Legacy OS intake] ";
 
 /** POST a contact to the Legacy OS CRM. Resolves true only on a 2xx. Never throws. */
 export async function saveToCrm(input: {
