@@ -35,14 +35,28 @@ const securityHeaders = [
   },
 ];
 
+// /shop/* is the Sweed storefront, proxied by app/shop/[[...path]]/route.ts.
+// Sweed's pages load Sweed's scripts and call Sweed's APIs, so this site's
+// strict CSP, X-Frame-Options and Permissions-Policy would break them; there
+// the upstream's own headers pass through, and only HSTS and nosniff are added.
+const shopHeaders = securityHeaders.filter(
+  (h) => h.key === "Strict-Transport-Security" || h.key === "X-Content-Type-Options",
+);
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
   async headers() {
     return [
       {
-        source: "/(.*)",
+        // Every path except /shop and /shop/...
+        source: "/((?!shop(?:/|$)).*)",
         headers: securityHeaders,
+      },
+      {
+        // Matches /shop as well as everything under it.
+        source: "/shop/:path*",
+        headers: shopHeaders,
       },
     ];
   },
